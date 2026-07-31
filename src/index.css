@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    background-color: #000000;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    overflow-x: hidden;
+  }
+}
+
+.font-display {
+  font-family: 'Syne', 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+}
+
+.font-sans {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Custom dashed grid guidelines with zinc tone */
+.grid-guideline {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 0%);
+  background-position: left;
+  background-size: 1px 12px;
+  background-repeat: repeat-y;
+}
