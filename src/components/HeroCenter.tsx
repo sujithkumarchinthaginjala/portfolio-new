@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Code, Terminal, Sparkles, Send, FileText, Download } from 'lucide-react';
 import { openPrintableResume, downloadResume } from '../utils/downloadResume';
+import { EASE_OUT } from '../utils/animations';
 
 interface HeroCenterProps {
   onOpenSignUpModal: () => void;
@@ -13,10 +14,10 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => 
       <div className="w-full grid grid-cols-1 md:grid-cols-12 items-center gap-8 my-auto">
         
         {/* Left Column: Stylized Tagline Paragraph with Bold Typography micro labels */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 1, delay: 0.25, ease: EASE_OUT }}
           className="md:col-span-5 text-left order-2 md:order-1 flex flex-col justify-center space-y-4"
         >
           <div className="inline-flex items-center gap-2">
@@ -64,10 +65,10 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => 
         </motion.div>
 
         {/* Center/Main Title Column: Ultra Bold Typography Title */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 1.1, ease: EASE_OUT }}
           className="md:col-span-7 flex flex-col items-center md:items-end text-center md:text-right order-1 md:order-2"
         >
           <h1 className="font-display text-[55px] sm:text-[95px] md:text-[110px] lg:text-[135px] font-extrabold uppercase tracking-[-0.04em] text-white leading-[0.88] select-none">
@@ -77,10 +78,10 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => 
             KUMAR
           </div>
           
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.9, delay: 0.55, ease: EASE_OUT }}
             className="flex items-center gap-4 mt-4"
           >
             <span className="h-[1px] w-8 sm:w-12 bg-zinc-600 hidden sm:block" />
@@ -92,10 +93,10 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => 
       </div>
 
       {/* Interactive Circular "Hire Me" Badge & Action Row below Title */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 0.6 }}
+        transition={{ duration: 0.9, delay: 0.75, ease: EASE_OUT }}
         className="mt-8 md:mt-12 mb-4 flex items-center justify-center gap-6"
       >
         <div className="relative group cursor-pointer" onClick={onOpenSignUpModal}>

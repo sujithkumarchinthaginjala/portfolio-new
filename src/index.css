@@ -1,12 +1,71 @@
 @import "tailwindcss";
 
 @layer base {
+  html {
+    /* Cinematic, connected scrolling for in-page anchor jumps */
+    scroll-behavior: smooth;
+  }
+
   body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
     background-color: #000000;
     color: #ffffff;
     letter-spacing: -0.01em;
     overflow-x: hidden;
+    /* Keep text crisp while transforms/blur are in flight */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/*
+ * Premium interaction defaults.
+ *
+ * The components already opt into Tailwind's `transition-*` utilities; here we
+ * simply give every one of them a longer, softer, GPU-friendly feel instead of
+ * the default 150ms linear-ish snap — no markup changes required.
+ */
+@layer utilities {
+  .transition,
+  .transition-all,
+  .transition-colors,
+  .transition-transform,
+  .transition-shadow,
+  .transition-opacity {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    transition-duration: 320ms;
+  }
+
+  /* Interactive elements: soft glow + lift, gentle click compression. */
+  a,
+  button {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  button:not(:disabled):active {
+    transform: scale(0.98);
+  }
+
+  /* Images fade + resolve in with a subtle scale-up, staying sharp. */
+  img {
+    image-rendering: auto;
+  }
+}
+
+/* Respect users who prefer reduced motion — cut everything back to instant. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

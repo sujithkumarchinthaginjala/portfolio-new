@@ -17,7 +17,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   onOpenMemberModal,
 }) => {
   return (
-    <header className="sticky top-0 z-50 w-full bg-black/60 backdrop-blur-2xl backdrop-saturate-180 border-b border-white/10 shadow-[0_10px_30px_rgba(0,0,0,0.8)] ring-1 ring-white/10 transition-all">
+    <header className="sticky top-0 z-50 w-full bg-zinc-950/60 backdrop-blur-2xl backdrop-saturate-150 border-b border-white/20 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] ring-1 ring-white/10 transition-all">
       {/* Specular Highlight Bar (Apple WWDC Glass Top Edge) */}
       <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
 
@@ -44,10 +44,24 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                 key={item}
                 onClick={() => {
                   setActiveTab(item);
+                  
+                  if (item === 'Home') {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return;
+                  }
+
                   const elementId = item.toLowerCase();
                   const elem = document.getElementById(elementId);
                   if (elem) {
-                    elem.scrollIntoView({ behavior: 'smooth' });
+                    // Get exact position and offset by 100px to account for the sticky header
+                    const headerOffset = 100;
+                    const elementPosition = elem.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                    window.scrollTo({
+                      top: offsetPosition,
+                      behavior: 'smooth'
+                    });
                   }
                 }}
                 className={`relative px-3.5 sm:px-4 py-1.5 text-[11px] font-semibold tracking-wider uppercase transition-all rounded-full cursor-pointer select-none whitespace-nowrap ${

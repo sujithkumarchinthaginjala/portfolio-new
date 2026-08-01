@@ -58,8 +58,10 @@ export const HeroCanvasBackground: React.FC = () => {
         const scrollableDistance = containerRef.current.scrollHeight - window.innerHeight;
 
         if (scrollableDistance > 0) {
-          // Progress from 0 to 1 as we scroll past the container
-          const scrolledPastStart = currentScrollY - containerStart;
+          // Progress from 0 to 1 as we scroll down the page
+          // By using currentScrollY directly for the Hero section,
+          // the frame animation begins immediately on the first scroll pixel.
+          const scrolledPastStart = currentScrollY;
           const scrollFraction = Math.max(0, Math.min(1, scrolledPastStart / scrollableDistance));
 
           const frameIndex = Math.floor(scrollFraction * frames313Count);
@@ -86,11 +88,11 @@ export const HeroCanvasBackground: React.FC = () => {
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-[300vh] -z-10 pointer-events-none">
-      {/* 
-         The canvas is sticky, so it stays fixed in the background 
+      {/*
+         The canvas is sticky, so it stays fixed in the background
          while the user scrolls through the 300vh container.
        */}
-      <div className="sticky top-0 w-full h-screen overflow-hidden">
+      <div className="sticky top-[64px] w-full h-[calc(100vh-64px)] overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full h-full object-cover opacity-60"

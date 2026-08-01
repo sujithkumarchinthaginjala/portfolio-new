@@ -14,17 +14,6 @@ export interface ProjectShowcaseItem {
   description: string;
   iconType: 'cms' | 'portal' | 'vision' | 'teams' | 'freight' | 'docu';
   capabilities: string[];
-  metrics: {
-    responseRate: string;
-    roi: string;
-    costReduction: string;
-  };
-  mockupData: {
-    botName: string;
-    messageTime: string;
-    initialMessage: string;
-    suggestedActions: string[];
-  };
 }
 
 export interface SkillItem {
@@ -53,6 +42,7 @@ export interface CertificationItem {
   description: string;
   badgeCode: string;
   verificationUrl: string;
+  fileUrls?: string[];
 }
 
 export interface JourneyItem {

@@ -84,8 +84,8 @@ export const SecondaryCanvasBackground: React.FC = () => {
 
   return (
     <div ref={containerRef} className="absolute inset-0 w-full h-[300vh] -z-10 pointer-events-none">
-      {/* 
-         The canvas is sticky, so it stays fixed in the background 
+      {/*
+         The canvas is sticky, so it stays fixed in the background
          while the user scrolls through the 300vh container.
        */}
       <div className="sticky top-0 w-full h-screen overflow-hidden">

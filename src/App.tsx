@@ -18,6 +18,7 @@ import { ExploreSection } from './components/ExploreSection';
 import { InteractiveModal } from './components/InteractiveModal';
 import { HeroCanvasBackground } from './components/HeroCanvasBackground';
 import { SecondaryCanvasBackground } from './components/SecondaryCanvasBackground';
+import { GlobalThreeBackground } from './components/GlobalThreeBackground';
 import { Grid3X3 } from 'lucide-react';
 
 export default function App() {
@@ -41,7 +42,17 @@ export default function App() {
   };
 
   return (
-    <div className="relative min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between">
+    <div
+      className="relative min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between"
+      style={{
+        backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.08) 1px, transparent 1px)',
+        backgroundSize: '32px 32px'
+      }}
+    >
+
+      {/* Global Three.js Scene sits perfectly behind everything */}
+      <GlobalThreeBackground />
+
       {/* Background: Pure plain black with optional architectural dashed guidelines */}
       <GridGuidelines showGuidelines={showGuidelines} />
 
@@ -53,12 +64,12 @@ export default function App() {
       />
 
       {/* Hero Section Container with Scroll Animation */}
-      <div className="relative z-10 w-full h-[300vh]">
+      <div className="relative z-10 w-full h-[300vh] bg-black">
         <HeroCanvasBackground />
-        
-        <div className="sticky top-0 flex flex-col justify-between h-screen w-full pointer-events-none">
+
+        <div className="sticky top-[130px] flex flex-col justify-between h-[calc(100vh-64px)] w-full pointer-events-none">
           {/* Make inner content pointer-events-auto so we can interact with buttons */}
-          <div className="flex-1 flex flex-col w-full pointer-events-auto pt-[64px]">
+          <div className="flex-1 flex flex-col w-full pointer-events-auto">
             {/* Hero Center Display */}
             <HeroCenter onOpenSignUpModal={handleOpenSignUpModal} />
           </div>
@@ -79,11 +90,6 @@ export default function App() {
       {/* Professional Journey Section (between Layout 2 and Layout 3) */}
       <JourneySection onActionClick={handleOpenSignUpModal} />
 
-      {/* Secondary Scroll Motion Background */}
-      <div className="relative z-10 w-full h-[300vh]">
-        <SecondaryCanvasBackground />
-      </div>
-
       {/* Experience Section */}
       <ExperienceSection onContactClick={handleOpenSignUpModal} />
 
@@ -92,6 +98,11 @@ export default function App() {
 
       {/* Certifications & Honors Section (5th Layout) */}
       <CertificationsSection onVerifyClick={(cert) => handleOpenSignUpModal()} />
+
+      {/* Secondary Scroll Motion Background (Moved before Contact) */}
+      <div className="relative z-10 w-full h-[300vh] bg-black">
+        <SecondaryCanvasBackground />
+      </div>
 
       {/* Contact Us Section */}
       <ContactSection onSuccess={handleOpenSignUpModal} />

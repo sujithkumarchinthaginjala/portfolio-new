@@ -1,5 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import {
+  useSectionScrollFx,
+  switchPanel,
+  staggerContainer,
+  staggerItem,
+  revealViewport,
+  EASE_OUT,
+} from '../utils/animations';
 import {
   CheckCircle2,
   ExternalLink,
@@ -13,6 +21,8 @@ import {
   Terminal,
   Brain
 } from 'lucide-react';
+import { FaJava, FaAngular, FaVuejs, FaAws, FaPython, FaDocker } from 'react-icons/fa';
+import { SiSpringboot, SiHibernate, SiTypescript, SiReactivex, SiVite, SiTailwindcss, SiMysql, SiPostgresql, SiTensorflow, SiOpencv, SiPostman } from 'react-icons/si';
 import { SkillItem } from '../types';
 
 interface SkillsSectionProps {
@@ -173,12 +183,14 @@ export const skillsData: SkillItem[] = [
 ];
 
 export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollFx = useSectionScrollFx(sectionRef);
   const [selectedSkillId, setSelectedSkillId] = useState<string>('springboot');
   const [showDocumentationModal, setShowDocumentationModal] = useState<boolean>(false);
 
   const activeSkill = skillsData.find((s) => s.id === selectedSkillId) || skillsData[0];
 
-  // SVG Logo Renderer for each Skill Icon
+  // SVG Logo Renderer for each Skill Icon (Lucide Fallbacks)
   const renderSkillIcon = (type: SkillItem['iconType'], className: string = 'w-8 h-8') => {
     switch (type) {
       case 'java':
@@ -199,13 +211,34 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) 
     }
   };
 
+  // Real Brand Icons Array for each Skill Type
+  const renderBrandIcons = (type: SkillItem['iconType']) => {
+    switch (type) {
+      case 'java':
+      case 'springboot':
+        return [<FaJava key="java" />, <SiSpringboot key="spring" />, <SiHibernate key="hibernate" />];
+      case 'angular':
+        return [<FaAngular key="angular" />, <SiTypescript key="ts" />, <SiReactivex key="rxjs" />];
+      case 'vue':
+        return [<FaVuejs key="vue" />, <SiVite key="vite" />, <SiTailwindcss key="tailwind" />];
+      case 'database':
+        return [<SiMysql key="mysql" />, <SiPostgresql key="pg" />];
+      case 'aws':
+        return [<FaAws key="aws" />, <FaDocker key="docker" />, <SiPostman key="postman" />];
+      case 'openai':
+      case 'python-ai' as any: // In case the type is updated
+        return [<FaPython key="python" />, <SiTensorflow key="tf" />, <SiOpencv key="opencv" />];
+      default:
+        return [<Code2 key="code" />];
+    }
+  };
+
   return (
-    <motion.section 
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      className="relative z-10 w-full py-20 px-4 sm:px-8 max-w-7xl mx-auto text-white bg-black border-t border-zinc-800/80 overflow-hidden"
+    <motion.section
+      ref={sectionRef}
+      {...scrollFx}
+      id="skills"
+      className="relative z-10 w-full py-20 px-4 sm:px-8 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
     >
       
       {/* Top Eyebrow Tag */}
@@ -230,14 +263,21 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) 
       </div>
 
       {/* TOP CARDS ROW (Interactive Model Cards Grid) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="show"
+        viewport={revealViewport}
+        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8"
+      >
         {skillsData.map((skill) => {
           const isSelected = selectedSkillId === skill.id;
           return (
             <motion.button
               key={skill.id}
+              variants={staggerItem}
               onClick={() => setSelectedSkillId(skill.id)}
-              whileHover={{ y: -4, scale: 1.02 }}
+              whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE_OUT } }}
               whileTap={{ scale: 0.98 }}
               className={`p-5 rounded-2xl text-left border flex flex-col justify-between transition-all cursor-pointer relative overflow-hidden group min-h-[220px] ${
                 isSelected
@@ -269,11 +309,16 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) 
                 </p>
               </div>
 
-              {/* Bottom Active Indicator Dot */}
+              {/* Bottom Active Indicator Dot & Brand Icons */}
               <div className="mt-4 pt-3 border-t border-zinc-800/60 flex items-center justify-between">
-                <span className="text-[9px] font-mono uppercase text-zinc-500">
-                  {skill.proficiency}% PROFICIENCY
-                </span>
+                <div className="flex items-center gap-2.5">
+                  {renderBrandIcons(skill.iconType).map((icon, i) => (
+                    <div key={i} className={`w-3.5 h-3.5 ${isSelected ? 'text-[#f05228]' : 'text-zinc-500 group-hover:text-zinc-300 transition-colors'}`}>
+                      {/* React.cloneElement preserves the original icon while applying the sizing class */}
+                      {React.cloneElement(icon as React.ReactElement<any>, { className: 'w-full h-full' })}
+                    </div>
+                  ))}
+                </div>
                 <div
                   className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center transition-all ${
                     isSelected
@@ -287,17 +332,17 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) 
             </motion.button>
           );
         })}
-      </div>
+      </motion.div>
 
       {/* BOTTOM DETAIL PANEL (Expands details of selected skill) */}
       <AnimatePresence mode="wait">
         <motion.div
           key={activeSkill.id}
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -16 }}
-          transition={{ duration: 0.3 }}
-          className="bg-zinc-950/90 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-8 backdrop-blur-xl relative overflow-hidden"
+          variants={switchPanel}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          className="bg-zinc-950/90 border border-zinc-800 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-8 backdrop-blur-xl relative overflow-hidden will-change-transform"
         >
           {/* Subtle Accent Glow */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#f05228]/5 rounded-full blur-3xl pointer-events-none" />
@@ -328,72 +373,26 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) 
                 {activeSkill.fullDescription}
               </p>
 
-              {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-3 pt-1">
-                <button
-                  onClick={onExploreClick}
-                  className="px-5 py-2.5 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-lg cursor-pointer inline-flex items-center gap-2"
-                >
-                  <span>Explore Use Cases</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => setShowDocumentationModal(true)}
-                  className="px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-zinc-500 font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2"
-                >
-                  <Code2 className="w-4 h-4" />
-                  <span>View Specs</span>
-                </button>
-              </div>
             </div>
 
-            {/* Column 2 (3 cols): Radial Progress Ring (Proficiency Level) */}
+            {/* Column 2 (3 cols): Real Brand Icons Stack */}
             <div className="lg:col-span-3 flex flex-col items-center justify-center border-y lg:border-y-0 lg:border-x border-zinc-800/80 py-6 lg:py-0 px-4">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400 font-bold mb-4">
-                PROFICIENCY LEVEL
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-zinc-400 font-bold mb-6 text-center">
+                CORE TECHNOLOGIES
               </span>
 
-              {/* SVG Radial Progress Ring */}
-              <div className="relative w-32 h-32 flex items-center justify-center">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  {/* Background Track Circle */}
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    className="text-zinc-800"
-                    strokeWidth="8"
-                    stroke="currentColor"
-                    fill="transparent"
-                  />
-                  {/* Active Animated Progress Circle */}
-                  <motion.circle
-                    cx="50"
-                    cy="50"
-                    r="40"
-                    stroke="#f05228"
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                    fill="transparent"
-                    initial={{ strokeDashoffset: 251.2 }}
-                    animate={{
-                      strokeDashoffset: 251.2 - (251.2 * activeSkill.proficiency) / 100
-                    }}
-                    transition={{ duration: 1, ease: 'easeOut' }}
-                    strokeDasharray="251.2"
-                  />
-                </svg>
-
-                {/* Inner Text Center */}
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="font-display text-2xl font-extrabold text-white">
-                    {activeSkill.proficiency}%
-                  </span>
-                  <span className="text-[9px] font-mono text-[#f05228] font-bold uppercase tracking-wider mt-0.5">
-                    {activeSkill.proficiencyLabel}
-                  </span>
-                </div>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                {renderBrandIcons(activeSkill.iconType).map((icon, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: i * 0.1, type: 'spring', stiffness: 200 }}
+                    className="w-14 h-14 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-[#f05228] shadow-lg hover:bg-zinc-800 hover:border-[#f05228]/50 transition-all"
+                  >
+                    {React.cloneElement(icon as React.ReactElement<any>, { className: 'w-7 h-7' })}
+                  </motion.div>
+                ))}
               </div>
             </div>
 

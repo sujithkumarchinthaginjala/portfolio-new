@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSectionScrollFx } from '../utils/animations';
 import {
   Sparkles,
   ArrowRight,
@@ -86,6 +87,8 @@ export const journeyData: JourneyItem[] = [
 ];
 
 export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollFx = useSectionScrollFx(sectionRef);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
   const activeItem = journeyData[activeIndex];
@@ -116,15 +119,13 @@ export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick })
   };
 
   return (
-    <motion.section 
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      id="experience" 
-      className="relative z-10 w-full py-24 px-4 sm:px-8 max-w-7xl mx-auto text-white bg-black border-t border-zinc-800/80 overflow-hidden"
+    <motion.section
+      ref={sectionRef}
+      {...scrollFx}
+      id="experience"
+      className="relative z-10 w-full py-24 px-4 sm:px-8 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
     >
-      
+
       {/* Dynamic Hollow Bottom Glow Effect emanating upward */}
       <div className="absolute inset-x-0 bottom-0 h-[480px] pointer-events-none overflow-hidden z-0">
         <motion.div
@@ -138,7 +139,7 @@ export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick })
       </div>
 
       <div className="relative z-10">
-        
+
         {/* Top Eyebrow Badge */}
         <div className="text-center mb-4">
           <span className="inline-block px-3.5 py-1 rounded-md bg-[#f05228]/15 border border-[#f05228]/30 text-[#f05228] text-[10px] sm:text-xs font-mono font-semibold tracking-widest uppercase">
@@ -198,7 +199,7 @@ export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick })
 
         {/* STACKED CARDS WITH SIDE PEEKS (Selected card center, non-selected peeking left & right) */}
         <div className="my-14 relative flex flex-col items-center justify-center min-h-[460px] px-2">
-          
+
           {/* Card Stack Deck Canvas */}
           <div className="relative w-full max-w-md sm:max-w-lg h-[400px] flex items-center justify-center">
             {journeyData.map((item, idx) => {
@@ -259,12 +260,12 @@ export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick })
                     zIndex: zIndex,
                     rotateY: rotateY
                   }}
-                  transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-                  className={`absolute w-full h-[380px] rounded-3xl p-6 sm:p-8 border flex flex-col justify-between cursor-pointer select-none transition-shadow ${
-                    isCenter
+                  transition={{ type: 'spring', stiffness: 170, damping: 26, mass: 0.9 }}
+                  style={{ willChange: 'transform, opacity' }}
+                  className={`absolute w-full h-[380px] rounded-3xl p-6 sm:p-8 border flex flex-col justify-between cursor-pointer select-none transition-shadow ${isCenter
                       ? 'bg-zinc-950/95 border-[#f05228] shadow-[0_0_40px_rgba(240,82,40,0.3)] ring-1 ring-[#f05228]'
                       : 'bg-zinc-900/90 border-zinc-800 hover:border-zinc-600 hover:brightness-110'
-                  }`}
+                    }`}
                 >
                   {/* Card Top Brand & Year */}
                   <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
@@ -355,9 +356,8 @@ export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick })
                 <button
                   key={idx}
                   onClick={() => setActiveIndex(idx)}
-                  className={`h-2 rounded-full transition-all cursor-pointer ${
-                    activeIndex === idx ? 'w-6 bg-[#f05228]' : 'w-2 bg-zinc-700'
-                  }`}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${activeIndex === idx ? 'w-6 bg-[#f05228]' : 'w-2 bg-zinc-700'
+                    }`}
                 />
               ))}
             </div>

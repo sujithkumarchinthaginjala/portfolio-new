@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSectionScrollFx } from '../utils/animations';
 import {
   Send,
   MapPin,
@@ -17,6 +18,8 @@ interface ContactSectionProps {
 }
 
 export const ContactSection: React.FC<ContactSectionProps> = ({ onSuccess }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollFx = useSectionScrollFx(sectionRef);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -45,13 +48,11 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSuccess }) => 
   };
 
   return (
-    <motion.section 
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      id="contact" 
-      className="relative z-10 w-full py-24 px-6 md:px-12 max-w-7xl mx-auto text-white bg-black border-t border-zinc-800/80 overflow-hidden"
+    <motion.section
+      ref={sectionRef}
+      {...scrollFx}
+      id="contact"
+      className="relative z-10 w-full py-24 px-6 md:px-12 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
     >
       
       {/* Background Glowing 3D Globe Visual */}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useSectionScrollFx } from '../utils/animations';
 import {
   Award,
   ChevronLeft,
@@ -19,75 +20,91 @@ interface CertificationsSectionProps {
 
 export const certificationsData: CertificationItem[] = [
   {
-    id: 'inu-fullstack-cert',
-    title: 'Java Full Stack Specialist',
-    issuer: 'INU TECHNOLOGY SOLUTIONS',
-    issueDate: 'Dec 2024',
-    projectName: 'Enterprise Java & Spring Boot Architecture',
+    id: 'java-spring-6-cert',
+    title: 'Java Spring Framework 6 & Spring Boot 3',
+    issuer: 'UDEMY BUSINESS - INU TECHNOLOGY SOLUTION',
+    issueDate: '2024',
+    projectName: 'Backend Development',
     recipient: 'Sujith Kumar Chinthaginjala',
     cardColor: '#7c2d12',
     accentText: '#fdba74',
-    description: 'Certified in end-to-end enterprise Java full stack development covering Spring Boot microservices, Angular 21, Vue 3 UI, RESTful API design, and MySQL database persistence.',
-    badgeCode: 'INU-FS-2024-8802',
-    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala'
+    description: 'Mastered enterprise backend development using Spring Framework 6 and Spring Boot 3, covering dependency injection, RESTful APIs, Spring MVC, Spring Data JPA, security fundamentals, and production-ready application architecture. Skills: Java 21, Spring Boot 3, Spring Framework 6, REST APIs, Hibernate / JPA, Dependency Injection, Maven.',
+    badgeCode: 'INU-SB-2024',
+    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala',
+    fileUrls: ['/certifications/java-spring-6.png']
   },
   {
-    id: 'coincent-ai-cert',
-    title: 'AI & Machine Learning Specialization',
-    issuer: 'COINCENT CERTIFICATE',
-    issueDate: 'Dec 2021',
-    projectName: 'Face Mask Recognition System',
-    recipient: 'Sujith Kumar Chinthaginjala',
-    cardColor: '#581c87',
-    accentText: '#d8b4fe',
-    description: 'Certification of completion in Artificial Intelligence using Python. Mastered TensorFlow model training, OpenCV image matrix preprocessing, and Convolutional Neural Networks (CNN).',
-    badgeCode: 'COINCENT-AI-2021-094',
-    verificationUrl: 'https://github.com/sujithkumarchinthaginjala/'
-  },
-  {
-    id: 'aits-btech-degree',
-    title: 'B.Tech in ECE (8.5 CGPA)',
-    issuer: 'AITS COLLEGE OF ENGINEERING',
-    issueDate: 'May 2024',
-    projectName: 'Electronics & Communication Engineering',
-    recipient: 'Sujith Kumar Chinthaginjala',
-    cardColor: '#064e3b',
-    accentText: '#6ee7b7',
-    description: 'Awarded Bachelor of Technology with academic distinction (8.5/10 CGPA). Comprehensive coursework in software engineering, object-oriented Java programming, DBMS, and data structures.',
-    badgeCode: 'AITS-ECE-2024-085',
-    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala'
-  },
-  {
-    id: 'java-db-foundations',
-    title: 'Java & SQL Foundations',
-    issuer: 'ORACLE ACADEMY',
-    issueDate: 'Jun 2023',
-    projectName: 'Java Programming & Relational SQL',
+    id: 'spring-boot-testing-cert',
+    title: 'Spring Boot Unit Testing with JUnit, Mockito & MockMvc',
+    issuer: 'UDEMY BUSINESS - INU TECHNOLOGY SOLUTION',
+    issueDate: '2024',
+    projectName: 'Testing & Quality',
     recipient: 'Sujith Kumar Chinthaginjala',
     cardColor: '#1e3a8a',
     accentText: '#93c5fd',
-    description: 'Validates core proficiency in Java syntax, object-oriented design principles, relational database structures, SQL querying, and exception handling.',
-    badgeCode: 'ORCL-JAVA-2023-1102',
-    verificationUrl: 'https://github.com/sujithkumarchinthaginjala/'
+    description: 'Developed expertise in writing maintainable unit and integration tests for enterprise Spring Boot applications using JUnit, Mockito, and MockMvc, ensuring robust backend quality and API validation. Skills: JUnit 5, Mockito, MockMvc, Spring Boot Testing, Integration Testing, Test-Driven Development.',
+    badgeCode: 'INU-TEST-2024',
+    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala',
+    fileUrls: ['/certifications/spring-boot-testing.png']
   },
   {
-    id: 'agile-devops-cert',
-    title: 'Agile Software & DevOps Tools',
-    issuer: 'SOFTWARE ENGINEERING ACADEMY',
-    issueDate: 'Oct 2023',
-    projectName: 'Modern CI/CD & Version Control',
+    id: 'vue-3-cert',
+    title: 'The Vue 3 Bootcamp — Complete Developer Guide',
+    issuer: 'UDEMY BUSINESS - INU TECHNOLOGY SOLUTION',
+    issueDate: '2024',
+    projectName: 'Frontend Development',
     recipient: 'Sujith Kumar Chinthaginjala',
-    cardColor: '#831843',
-    accentText: '#fbcfe8',
-    description: 'Certificate in Agile development methodologies, Jira sprint workflows, Git/GitHub branching strategies, Apache Maven build automation, and Postman API testing.',
-    badgeCode: 'AGILE-DEV-2023-442',
-    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala'
+    cardColor: '#064e3b',
+    accentText: '#6ee7b7',
+    description: 'Built modern single-page applications using Vue 3 Composition API, reusable components, routing, state management, and frontend architecture best practices. Skills: Vue 3, Composition API, Pinia, Vue Router, JavaScript, TypeScript.',
+    badgeCode: 'INU-VUE-2024',
+    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala',
+    fileUrls: ['/certifications/vue-bootcamp.png']
+  },
+  {
+    id: 'coincent-ai-cert',
+    title: 'Artificial Intelligence with Python',
+    issuer: 'COINCENT',
+    issueDate: 'Oct 2021 – Dec 2021',
+    projectName: 'Internships / Professional Training',
+    recipient: 'Sujith Kumar Chinthaginjala',
+    cardColor: '#581c87',
+    accentText: '#d8b4fe',
+    description: 'Professional Training & Internship in Artificial Intelligence using Python. Highlights include Face Mask Recognition using TensorFlow, Python, NumPy, Pandas, and Image Classification.',
+    badgeCode: 'COINCENT-AI-2021',
+    verificationUrl: 'https://github.com/sujithkumarchinthaginjala/',
+    fileUrls: [
+      '/certifications/ai-internship-1.pdf',
+      '/certifications/ai-internship-2.pdf',
+      '/certifications/ai-internship-3.pdf'
+    ]
+  },
+  {
+    id: 'linkedin-learning-cert',
+    title: 'LinkedIn Learning Certification',
+    issuer: 'LINKEDIN LEARNING',
+    issueDate: '2024',
+    projectName: 'Professional Development',
+    recipient: 'Sujith Kumar Chinthaginjala',
+    cardColor: '#0f172a',
+    accentText: '#60a5fa',
+    description: 'Completed certification through LinkedIn Learning. Validates skills and knowledge acquired through the professional development curriculum.',
+    badgeCode: 'LINKEDIN-2024',
+    verificationUrl: 'https://www.linkedin.com/in/sujithkumarchinthaginjala',
+    fileUrls: ['/certifications/linkedin-cert.pdf']
   }
 ];
 
 export const CertificationsSection: React.FC<CertificationsSectionProps> = ({ onVerifyClick }) => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const scrollFx = useSectionScrollFx(sectionRef);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [selectedCertModal, setSelectedCertModal] = useState<CertificationItem | null>(null);
+  const [currentFileIndex, setCurrentFileIndex] = useState<number>(0);
+
+  useEffect(() => {
+    setCurrentFileIndex(0);
+  }, [selectedCertModal]);
 
   const activeCert = certificationsData[currentIndex];
 
@@ -100,13 +117,11 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({ on
   };
 
   return (
-    <motion.section 
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-100px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-      id="certifications" 
-      className="relative z-10 w-full py-20 px-4 sm:px-8 max-w-7xl mx-auto text-white bg-black border-t border-zinc-800/80 overflow-hidden"
+    <motion.section
+      ref={sectionRef}
+      {...scrollFx}
+      id="certifications"
+      className="relative z-10 w-full py-20 px-4 sm:px-8 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
     >
       
       {/* Top Eyebrow Tag */}
@@ -192,9 +207,10 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({ on
                     opacity: opacity,
                     zIndex: zIndex
                   }}
-                  transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+                  transition={{ type: 'spring', stiffness: 180, damping: 26, mass: 0.9 }}
                   style={{
-                    backgroundColor: cert.cardColor
+                    backgroundColor: cert.cardColor,
+                    willChange: 'transform, opacity'
                   }}
                   className={`absolute top-0 w-full h-[430px] rounded-[32px] p-6 sm:p-8 shadow-2xl flex flex-col justify-between cursor-pointer border border-white/10 select-none overflow-hidden ${
                     relativePos === 0 ? 'ring-2 ring-white/20' : 'hover:brightness-110'
@@ -274,16 +290,10 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({ on
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                if (onVerifyClick) {
-                  onVerifyClick(activeCert);
-                } else {
-                  setSelectedCertModal(activeCert);
-                }
-              }}
+              onClick={() => setSelectedCertModal(activeCert)}
               className="px-7 py-3 bg-white hover:bg-zinc-200 text-black font-display font-extrabold text-xs uppercase tracking-wider rounded-full shadow-2xl transition-all cursor-pointer inline-flex items-center gap-2"
             >
-              <span>Visit</span>
+              <span>View Certificate</span>
               <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
             </motion.button>
           </div>
@@ -321,7 +331,7 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({ on
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-md w-full text-white space-y-6 shadow-2xl relative"
+              className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 sm:p-8 max-w-4xl w-full text-white space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto"
             >
               <div className="flex items-center justify-between border-b border-zinc-800 pb-4">
                 <div className="flex items-center gap-2">
@@ -338,37 +348,84 @@ export const CertificationsSection: React.FC<CertificationsSectionProps> = ({ on
                 </button>
               </div>
 
-              <div className="space-y-3 font-mono text-xs text-zinc-300">
-                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Credential Title</span>
-                  <span className="text-white font-bold text-sm">{selectedCertModal.title}</span>
-                </div>
-                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Issuing Authority</span>
-                  <span className="text-white font-bold">{selectedCertModal.issuer}</span>
-                </div>
-                <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
-                  <span className="text-zinc-500 text-[10px] uppercase block">Badge ID</span>
-                  <span className="text-emerald-400 font-bold">{selectedCertModal.badgeCode}</span>
-                </div>
-              </div>
+              <div className="flex flex-col md:flex-row gap-6">
+                {/* Certificate File/Carousel */}
+                {selectedCertModal.fileUrls && selectedCertModal.fileUrls.length > 0 && (
+                  <div className="relative w-full md:w-3/5 flex flex-col items-center justify-center bg-zinc-900 rounded-xl p-2 border border-zinc-800 overflow-hidden min-h-[40vh]">
+                    {selectedCertModal.fileUrls[currentFileIndex].toLowerCase().endsWith('.pdf') ? (
+                      <iframe 
+                        src={selectedCertModal.fileUrls[currentFileIndex]} 
+                        title={selectedCertModal.title}
+                        className="w-full h-[60vh] rounded-lg border-0"
+                      />
+                    ) : (
+                      <img 
+                        src={selectedCertModal.fileUrls[currentFileIndex]} 
+                        alt={selectedCertModal.title} 
+                        className="w-full h-auto rounded-lg object-contain max-h-[60vh]"
+                      />
+                    )}
 
-              <div className="flex items-center gap-3">
-                <a
-                  href={selectedCertModal.verificationUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 py-3 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-xs uppercase text-center rounded-xl transition-colors inline-flex items-center justify-center gap-2"
-                >
-                  <span>Verify Registry</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
-                </a>
-                <button
-                  onClick={() => setSelectedCertModal(null)}
-                  className="px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-display font-bold text-xs uppercase rounded-xl transition-colors"
-                >
-                  Close
-                </button>
+                    {/* Carousel Controls */}
+                    {selectedCertModal.fileUrls.length > 1 && (
+                      <div className="absolute bottom-4 flex items-center gap-4 bg-black/60 backdrop-blur-md px-5 py-2.5 rounded-full border border-white/10 shadow-xl">
+                        <button 
+                          onClick={() => setCurrentFileIndex(p => Math.max(0, p - 1))} 
+                          disabled={currentFileIndex === 0}
+                          className="text-white hover:text-emerald-400 disabled:opacity-30 disabled:hover:text-white transition-colors cursor-pointer flex items-center justify-center"
+                        >
+                          <ChevronLeft className="w-5 h-5" />
+                        </button>
+                        <span className="text-white/80 font-mono text-xs font-bold w-12 text-center">
+                          {currentFileIndex + 1} / {selectedCertModal.fileUrls.length}
+                        </span>
+                        <button 
+                          onClick={() => setCurrentFileIndex(p => Math.min(selectedCertModal.fileUrls!.length - 1, p + 1))} 
+                          disabled={currentFileIndex === selectedCertModal.fileUrls.length - 1}
+                          className="text-white hover:text-emerald-400 disabled:opacity-30 disabled:hover:text-white transition-colors cursor-pointer flex items-center justify-center"
+                        >
+                          <ChevronRight className="w-5 h-5" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Details Section */}
+                <div className={`space-y-6 flex-1 flex flex-col justify-center`}>
+                  <div className="space-y-3 font-mono text-xs text-zinc-300">
+                    <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
+                      <span className="text-zinc-500 text-[10px] uppercase block">Credential Title</span>
+                      <span className="text-white font-bold text-sm">{selectedCertModal.title}</span>
+                    </div>
+                    <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
+                      <span className="text-zinc-500 text-[10px] uppercase block">Issuing Authority</span>
+                      <span className="text-white font-bold">{selectedCertModal.issuer}</span>
+                    </div>
+                    <div className="p-3 bg-zinc-900 rounded-xl border border-zinc-800">
+                      <span className="text-zinc-500 text-[10px] uppercase block">Badge ID</span>
+                      <span className="text-emerald-400 font-bold">{selectedCertModal.badgeCode}</span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <a
+                      href={selectedCertModal.verificationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-3 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-xs uppercase text-center rounded-xl transition-colors inline-flex items-center justify-center gap-2"
+                    >
+                      <span>Verify Registry</span>
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
+                    <button
+                      onClick={() => setSelectedCertModal(null)}
+                      className="px-4 py-3 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-display font-bold text-xs uppercase rounded-xl transition-colors"
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
