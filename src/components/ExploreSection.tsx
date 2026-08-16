@@ -1,14 +1,7 @@
 import React, { useRef } from 'react';
-import { motion } from 'motion/react';
-import { ArrowUpRight, Server, Database, Layers } from 'lucide-react';
+import { motion, useScroll, useTransform, MotionValue } from 'motion/react';
+import { LayoutTemplate, Cpu, Compass, Activity, Database, Cloud, Users } from 'lucide-react';
 import { NavTab } from '../types';
-import {
-  useSectionScrollFx,
-  staggerContainer,
-  staggerItem,
-  revealViewport,
-  EASE_OUT,
-} from '../utils/animations';
 
 interface ExploreSectionProps {
   activeTab: NavTab;
@@ -19,122 +12,278 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
   activeTab,
   onOpenSignUpModal,
 }) => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const scrollFx = useSectionScrollFx(sectionRef);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
+
+  // Clean exit opacity transition as JourneySection slides up from bottom
+  const sectionContentOpacity = useTransform(
+    scrollYProgress,
+    [0, 0.05, 0.85, 0.96],
+    [1, 1, 1, 0]
+  );
+
+  // Dynamic CSS blur for background text content as cards fly in on top
+  const bgContentBlur = useTransform(
+    scrollYProgress,
+    [0.08, 0.22, 0.35, 0.65, 0.80, 0.92],
+    ["blur(0px)", "blur(4px)", "blur(14px)", "blur(14px)", "blur(4px)", "blur(0px)"]
+  );
 
   return (
-    <motion.section
-      ref={sectionRef}
-      {...scrollFx}
+    <section
       id="about"
-      className="relative z-10 w-full py-24 px-6 md:px-12 max-w-7xl mx-auto border-t border-zinc-800 text-white"
+      ref={containerRef}
+      className="relative z-10 w-full h-[450vh] text-zinc-900"
     >
-      {/* Section Header */}
       <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="show"
-        viewport={revealViewport}
-        className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6"
+        style={{ opacity: sectionContentOpacity }}
+        className="sticky top-0 h-screen w-full overflow-hidden flex items-center justify-center pointer-events-none"
       >
-        <div>
-          <motion.span variants={staggerItem} className="text-[10px] uppercase tracking-[0.3em] font-semibold text-[#f05228] block mb-2 font-mono">
-            // ABOUT ME & PROFESSIONAL SUMMARY
-          </motion.span>
-          <motion.h2 variants={staggerItem} className="font-display text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight uppercase leading-tight">
-            Engineering Scalable Enterprise Applications
-          </motion.h2>
+
+        {/* Header Text with Dynamic Scroll Blur */}
+        <motion.div
+          style={{ filter: bgContentBlur }}
+          className="absolute top-24 lg:top-32 inset-x-0 px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6 z-0 transition-all duration-300"
+        >
+          <div>
+            <span className="text-[10px] uppercase tracking-[0.3em] font-semibold text-[#f05228] block mb-2 font-mono">
+              // ABOUT ME & PROFESSIONAL SUMMARY
+            </span>
+            <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight uppercase leading-tight max-w-4xl text-zinc-900">
+              Engineering Scalable Enterprise Applications
+            </h2>
+          </div>
+          <p className="text-zinc-600 text-xs sm:text-sm max-w-md leading-relaxed font-sans font-medium pb-2">
+            Java Full Stack Developer with experience developing enterprise web applications using Java, Spring Boot, Angular, Vue 3, SQL, and REST APIs. Skilled in designing scalable backend services, building responsive user interfaces, and collaborating within Agile teams.
+          </p>
+
+        </motion.div>
+
+        {/* Premium Bottom Left Content Fill with Dynamic Scroll Blur */}
+        <motion.div
+          style={{ filter: bgContentBlur }}
+          className="absolute bottom-24 lg:bottom-32 px-6 md:px-12 max-w-7xl mx-auto z-0 transition-all duration-300"
+        >
+          <div className="flex flex-wrap items-end gap-8 md:gap-16 pb-4 opacity-80 mt-12 md:mt-0">
+            <div className="flex flex-col gap-1">
+              <span className="font-display text-3xl md:text-5xl font-black text-zinc-900">1.5+</span>
+              <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Years Experience</span>
+            </div>
+            <div className="h-8 md:h-12 w-[1px] bg-black/10 hidden md:block" />
+            <div className="flex flex-col gap-1">
+              <span className="font-display text-3xl md:text-5xl font-black text-zinc-900">100<span className="text-[#f05228]">%</span></span>
+              <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Code Quality</span>
+            </div>
+            <div className="h-8 md:h-12 w-[1px] bg-black/10 hidden md:block" />
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 rounded-full bg-[#f05228] animate-pulse shadow-[0_0_10px_rgba(240,82,40,0.5)]" />
+                <span className="text-xs md:text-sm uppercase tracking-widest text-[#f05228] font-mono font-bold">Available to Build</span>
+              </div>
+              <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-zinc-500 font-mono">Based in Hyderabad, IN</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Interactive Layer */}
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center pointer-events-auto z-10 perspective-[1000px]">
+
+          {/* Card 1: Top Left - "Create" (Full Narrative) */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="-50vw" enterY="-30vh"
+            scatterX="-26vw" scatterY="-12vh"
+            exitX="-10vw" exitY="-5vh"
+          >
+            <div className="p-6 md:p-8 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(240,82,40,0.48)] hover:border-[#f05228]/70 rounded-[32px] backdrop-blur-2xl w-[22rem] md:w-[28rem] flex flex-col gap-5 group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="w-12 h-12 rounded-full bg-[#f05228]/10 flex items-center justify-center text-[#f05228]">
+                <LayoutTemplate className="w-5 h-5" />
+              </div>
+              <div>
+                <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono block mb-1">01 · CREATE</span>
+                <h3 className="font-display text-2xl font-bold text-zinc-900 mb-3">Building Digital Experiences</h3>
+                <p className="text-sm text-zinc-600 leading-relaxed font-medium">I transform ideas into modern digital experiences by combining intuitive design with scalable engineering. Every interface is crafted to be elegant, responsive, and purposeful—delivering products that feel as refined as they are functional.</p>
+              </div>
+            </div>
+          </FloatingCard>
+
+          {/* Card 2: Top Right - "Stats/Graphic" */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="50vw" enterY="-30vh"
+            scatterX="26vw" scatterY="-24vh"
+            exitX="10vw" exitY="-5vh"
+          >
+            <div className="p-6 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(56,189,248,0.48)] hover:border-sky-400/70 rounded-[32px] backdrop-blur-2xl w-48 md:w-64 flex flex-col items-center text-center gap-3 group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="w-12 h-12 rounded-full bg-sky-500/10 flex items-center justify-center text-sky-500 mb-1">
+                <Activity className="w-6 h-6" />
+              </div>
+              <h3 className="font-mono text-sm font-bold text-zinc-900 tracking-widest uppercase">Performance</h3>
+              <div className="flex items-end gap-1">
+                <span className="font-display text-3xl font-black text-zinc-900">99.9</span>
+                <span className="text-xs text-zinc-500 pb-1 font-medium">% Uptime</span>
+              </div>
+            </div>
+          </FloatingCard>
+
+          {/* Card 3: Mid Right - "Engineer" (Full Narrative) */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="50vw" enterY="0vh"
+            scatterX="28vw" scatterY="6vh"
+            exitX="12vw" exitY="2vh"
+          >
+            <div className="p-6 md:p-8 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(99,102,241,0.48)] hover:border-indigo-400/70 rounded-[32px] backdrop-blur-2xl w-[22rem] md:w-[28rem] flex flex-col gap-5 group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="flex justify-between items-center">
+                <div className="w-12 h-12 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-600">
+                  <Cpu className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">02 · ENGINEER</span>
+              </div>
+              <div>
+                <h3 className="font-display text-2xl font-bold text-zinc-900 mb-3">Engineering with Purpose</h3>
+                <p className="text-sm text-zinc-600 leading-relaxed font-medium">Behind every polished experience is a foundation built for reliability. I architect clean, maintainable systems with a focus on performance, scalability, and long-term sustainability—ensuring software evolves effortlessly as requirements grow.</p>
+              </div>
+            </div>
+          </FloatingCard>
+
+          {/* Card 4: Mid Left - "Data" */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="-50vw" enterY="0vh"
+            scatterX="-38vw" scatterY="8vh"
+            exitX="-12vw" exitY="2vh"
+          >
+            <div className="p-4 md:p-6 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(236,72,153,0.48)] hover:border-pink-400/70 rounded-[32px] backdrop-blur-2xl w-48 md:w-60 flex gap-4 items-center group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="w-10 h-10 shrink-0 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-500">
+                <Database className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-mono text-xs font-bold text-zinc-900 uppercase tracking-wider">Data Systems</h3>
+                <p className="text-[10px] text-zinc-500 font-medium mt-1">SQL / NoSQL / ORM</p>
+              </div>
+            </div>
+          </FloatingCard>
+
+          {/* Card 5: Bottom Left - "Cloud" */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="-50vw" enterY="50vh"
+            scatterX="-32vw" scatterY="26vh"
+            exitX="-8vw" exitY="10vh"
+          >
+            <div className="p-4 md:p-6 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(6,182,212,0.48)] hover:border-cyan-400/70 rounded-[32px] backdrop-blur-2xl w-48 md:w-60 flex gap-4 items-center group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="w-10 h-10 shrink-0 rounded-full bg-cyan-500/10 flex items-center justify-center text-cyan-600">
+                <Cloud className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="font-mono text-xs font-bold text-zinc-900 uppercase tracking-wider">Cloud Native</h3>
+                <p className="text-[10px] text-zinc-500 font-medium mt-1">AWS / Docker / CI/CD</p>
+              </div>
+            </div>
+          </FloatingCard>
+
+          {/* Card 6: Bottom Right - "Agile" */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="50vw" enterY="50vh"
+            scatterX="32vw" scatterY="26vh"
+            exitX="8vw" exitY="10vh"
+          >
+            <div className="p-4 md:p-6 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(16,185,129,0.48)] hover:border-emerald-400/70 rounded-[32px] backdrop-blur-2xl w-48 md:w-60 flex flex-col gap-3 group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="w-10 h-10 shrink-0 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                <Users className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-mono text-xs font-bold text-zinc-900 uppercase tracking-wider">Agile Delivery</h3>
+                <p className="text-[10px] text-zinc-600 font-medium mt-1">Leading sprints & cross-functional teams.</p>
+              </div>
+            </div>
+          </FloatingCard>
+
+          {/* Card 7: Bottom Center - "Evolve" (Full Narrative) */}
+          <FloatingCard
+            scrollYProgress={scrollYProgress}
+            enterX="0vw" enterY="50vh"
+            scatterX="0vw" scatterY="22vh"
+            exitX="0vw" exitY="8vh"
+          >
+            <div className="p-6 md:p-8 bg-white/40 border border-white/80 shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_65px_rgba(168,85,247,0.48)] hover:border-purple-400/70 rounded-[32px] backdrop-blur-2xl w-[22rem] md:w-[28rem] flex flex-col gap-5 group hover:bg-white/60 transition-all duration-300 ring-1 ring-black/5">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-purple-500/10 flex items-center justify-center text-purple-600">
+                  <Compass className="w-6 h-6" />
+                </div>
+                <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-mono">03 · EVOLVE</span>
+              </div>
+              <div>
+                <h3 className="font-display text-2xl font-bold text-zinc-900 mb-3">Driven by Innovation</h3>
+                <p className="text-sm text-zinc-600 leading-relaxed font-medium">Technology never stands still, and neither do I. By embracing continuous learning, modern development practices, and emerging technologies, I build solutions that are ready for today's challenges and tomorrow's opportunities.</p>
+              </div>
+            </div>
+          </FloatingCard>
+
         </div>
-        <motion.p variants={staggerItem} className="text-zinc-400 text-xs sm:text-sm max-w-md leading-relaxed font-sans font-medium">
-          Java Full Stack Developer with experience developing enterprise web applications using Java, Spring Boot, Angular, Vue 3, SQL, and REST APIs. Skilled in designing scalable backend services, building responsive user interfaces, and collaborating within Agile teams.
-        </motion.p>
       </motion.div>
+    </section>
+  );
+};
 
-      {/* Grid Features */}
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        whileInView="show"
-        viewport={revealViewport}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16"
-      >
-        <motion.div
-          variants={staggerItem}
-          whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE_OUT } }}
-          className="p-8 bg-zinc-950/80 border border-zinc-800 rounded-2xl flex flex-col justify-between group hover:border-[#f05228]/60 hover:shadow-[0_20px_50px_-20px_rgba(240,82,40,0.35)] transition-all shadow-xl"
-        >
-          <div className="space-y-4">
-            <div className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center border border-zinc-700 text-[#f05228]">
-              <Server className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-xl font-bold uppercase tracking-tight text-white">Backend & Microservices</h3>
-            <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans">
-              Designing RESTful APIs and backend business logic using Java, Spring Boot, Spring Framework 6, and Hibernate/JPA ORM frameworks.
-            </p>
-          </div>
-          <button
-            onClick={onOpenSignUpModal}
-            className="mt-8 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#f05228] group-hover:translate-x-1 transition-transform cursor-pointer"
-          >
-            <span>Learn More</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
-        </motion.div>
+// Sub-component for animating individual cards
+interface FloatingCardProps {
+  children: React.ReactNode;
+  scrollYProgress: MotionValue<number>;
+  enterX: string; enterY: string;
+  scatterX: string; scatterY: string;
+  exitX: string; exitY: string;
+}
 
-        <motion.div
-          variants={staggerItem}
-          whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE_OUT } }}
-          className="p-8 bg-zinc-950/80 border border-zinc-800 rounded-2xl flex flex-col justify-between group hover:border-[#f05228]/60 hover:shadow-[0_20px_50px_-20px_rgba(240,82,40,0.35)] transition-all shadow-xl"
-        >
-          <div className="space-y-4">
-            <div className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center border border-zinc-700 text-[#f05228]">
-              <Layers className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-xl font-bold uppercase tracking-tight text-white">Modern Frontend UI</h3>
-            <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans">
-              Building responsive single-page web applications with Angular 21, Vue 3 Composition API, TypeScript, and optimized asset delivery.
-            </p>
-          </div>
-          <button
-            onClick={onOpenSignUpModal}
-            className="mt-8 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#f05228] group-hover:translate-x-1 transition-transform cursor-pointer"
-          >
-            <span>View Architecture</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
-        </motion.div>
+const FloatingCard: React.FC<FloatingCardProps> = ({
+  children, scrollYProgress,
+  enterX, enterY,
+  scatterX, scatterY,
+  exitX, exitY
+}) => {
+  // Keyframes for scroll progress:
+  // 0.00 - 0.15 : Hidden offscreen
+  // 0.15 - 0.35 : Fly in to scatter position
+  // 0.35 - 0.65 : Dwell in scatter position
+  // 0.65 - 0.85 : Fly out
+  // 0.85 - 1.00 : Gone
 
-        <motion.div
-          variants={staggerItem}
-          whileHover={{ y: -6, transition: { duration: 0.4, ease: EASE_OUT } }}
-          className="p-8 bg-zinc-950/80 border border-zinc-800 rounded-2xl flex flex-col justify-between group hover:border-[#f05228]/60 hover:shadow-[0_20px_50px_-20px_rgba(240,82,40,0.35)] transition-all shadow-xl"
-        >
-          <div className="space-y-4">
-            <div className="w-10 h-10 rounded-full bg-zinc-900 flex items-center justify-center border border-zinc-700 text-[#f05228]">
-              <Database className="w-5 h-5" />
-            </div>
-            <h3 className="font-display text-xl font-bold uppercase tracking-tight text-white">Databases & DevOps</h3>
-            <p className="text-zinc-400 text-xs sm:text-sm leading-relaxed font-sans">
-              Structured database operations in MySQL and PostgreSQL, version control with Git/GitHub, Maven builds, and AWS cloud basics.
-            </p>
-          </div>
-          <button
-            onClick={onOpenSignUpModal}
-            className="mt-8 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#f05228] group-hover:translate-x-1 transition-transform cursor-pointer"
-          >
-            <span>Explore Stack</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </button>
-        </motion.div>
-      </motion.div>
+  const x = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [enterX, enterX, scatterX, scatterX, exitX, exitX]
+  );
 
-      {/* Bottom Footer Credits */}
-      <div className="pt-8 border-t border-zinc-800 flex flex-col sm:flex-row items-center justify-between text-xs text-zinc-500 gap-4 font-mono">
-        <div>SUJITH KUMAR CHINTHAGINJALA // JAVA FULL STACK DEVELOPER</div>
-        <div className="flex items-center gap-4">
-          <span>HYDERABAD, INDIA • +91-6302487572</span>
-        </div>
-      </div>
-    </motion.section>
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [enterY, enterY, scatterY, scatterY, exitY, exitY]
+  );
+
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [0, 0, 1, 1, 0, 0]
+  );
+
+  const scale = useTransform(
+    scrollYProgress,
+    [0, 0.15, 0.35, 0.65, 0.85, 1],
+    [0.8, 0.8, 1, 1, 0.8, 0.8]
+  );
+
+  return (
+    <motion.div
+      style={{ x, y, opacity, scale, position: 'absolute' }}
+      className="will-change-transform flex justify-center items-center"
+    >
+      {children}
+    </motion.div>
   );
 };

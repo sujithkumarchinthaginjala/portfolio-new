@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence, useTransform } from 'motion/react';
 import { useSectionScrollFx } from '../utils/animations';
 import {
   Sparkles,
@@ -32,28 +32,28 @@ export const journeyData: JourneyItem[] = [
     id: 'inu-tech',
     title: 'Java Full Stack Developer',
     challengesCount: 'INU Technology Solutions',
-    buildersCount: 'Dec 2024 - Present',
+    buildersCount: 'Dec 2024 - Now',
     iconBgColor: 'bg-gradient-to-tr from-[#f05228] to-amber-500',
     glowColor: 'from-[#f05228]/60 via-orange-600/30 to-transparent',
     accentHex: '#f05228',
     iconType: 'inu',
     shortDesc: 'Developing enterprise web applications using Java, Spring Boot, Angular, and Vue 3. Designing RESTful APIs and SQL operations.',
     milestone: 'Current Role',
-    year: 'Dec 2024 - Present',
+    year: 'Dec 2024 - Now',
     tags: ['Java', 'Spring Boot', 'Angular', 'Vue 3', 'REST APIs', 'SQL']
   },
   {
     id: 'fpl-client',
     title: 'Full Stack Engineer',
     challengesCount: 'Client: Florida Power & Light (FPL)',
-    buildersCount: 'Dec 2024 - Present',
+    buildersCount: 'Dec 2024 - Now',
     iconBgColor: 'bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600',
     glowColor: 'from-sky-600/50 via-blue-600/30 to-transparent',
     accentHex: '#38bdf8',
     iconType: 'fpl',
     shortDesc: 'Developed enterprise Correspondence Management Systems (CMS) with Angular 21 & Spring Boot, and Assist Portal with Vue 3.',
     milestone: 'Enterprise Client',
-    year: 'Dec 2024 - Present',
+    year: 'Dec 2024 - Now',
     tags: ['Angular 21', 'Vue 3', 'Spring Boot', 'MySQL', 'Agile']
   },
   {
@@ -87,19 +87,25 @@ export const journeyData: JourneyItem[] = [
 ];
 
 export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick }) => {
+  const scrollTrackRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const scrollFx = useSectionScrollFx(sectionRef);
+  const scrollFx = useSectionScrollFx(scrollTrackRef);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [isDesktop, setIsDesktop] = useState<boolean>(false);
 
   const activeItem = journeyData[activeIndex];
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev === journeyData.length - 1 ? 0 : prev + 1));
-  };
+  // Detect desktop screen width responsive logic
+  useEffect(() => {
+    const checkIsDesktop = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    checkIsDesktop();
+    window.addEventListener('resize', checkIsDesktop);
+    return () => window.removeEventListener('resize', checkIsDesktop);
+  }, []);
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev === 0 ? journeyData.length - 1 : prev - 1));
-  };
+
 
   const renderIcon = (type: JourneyItem['iconType']) => {
     switch (type) {
@@ -119,281 +125,268 @@ export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick })
   };
 
   return (
-    <motion.section
-      ref={sectionRef}
-      {...scrollFx}
+    <div
+      ref={scrollTrackRef}
       id="experience"
-      className="relative z-10 w-full py-24 px-4 sm:px-8 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
+      className="relative w-full py-20 lg:py-28"
     >
+      <motion.section
+        ref={sectionRef}
+        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 text-white overflow-hidden"
+      >
+        <div className="relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
 
-      {/* Dynamic Hollow Bottom Glow Effect emanating upward */}
-      <div className="absolute inset-x-0 bottom-0 h-[480px] pointer-events-none overflow-hidden z-0">
-        <motion.div
-          key={activeItem.id}
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className={`w-full h-full bg-gradient-to-t ${activeItem.glowColor} blur-3xl opacity-80 transform translate-y-32`}
-        />
-        <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-black via-black/80 to-transparent" />
-      </div>
+            {/* LEFT COLUMN: Section Header & Actions (Sticky on desktop) */}
+            <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-8 text-center lg:text-left">
+              {/* Top Eyebrow Badge */}
+              <div className="flex justify-center lg:justify-start">
+                <span className="inline-block px-3.5 py-1 rounded-md bg-[#f05228]/15 border border-[#f05228]/30 text-[#f05228] text-[10px] sm:text-xs font-mono font-semibold tracking-widest uppercase">
+                  CAREER TIMELINE & EXPERIENCE
+                </span>
+              </div>
 
-      <div className="relative z-10">
+              {/* Section Main Title */}
+              <div>
+                <h2 className="font-display text-4xl sm:text-5xl font-extrabold uppercase tracking-tight text-white leading-tight">
+                  Professional <br />
+                  <span className="text-zinc-200">Experience Journey.</span>
+                </h2>
+                <p className="text-zinc-400 text-xs sm:text-sm font-medium leading-relaxed mt-4 max-w-2xl font-sans">
+                  A chronological timeline of Java Full Stack development, enterprise client deliveries for Florida Power & Light (FPL), and AI system engineering.
+                </p>
+              </div>
 
-        {/* Top Eyebrow Badge */}
-        <div className="text-center mb-4">
-          <span className="inline-block px-3.5 py-1 rounded-md bg-[#f05228]/15 border border-[#f05228]/30 text-[#f05228] text-[10px] sm:text-xs font-mono font-semibold tracking-widest uppercase">
-            CAREER TIMELINE & EXPERIENCE
-          </span>
-        </div>
+              {/* Action Triggers */}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
 
-        {/* Section Main Title */}
-        <div className="text-center max-w-3xl mx-auto mb-8">
-          <h2 className="font-display text-4xl sm:text-6xl font-extrabold uppercase tracking-tight text-white leading-tight">
-            Professional <br />
-            <span className="text-zinc-200">Experience Journey.</span>
-          </h2>
-          <p className="text-zinc-400 text-xs sm:text-sm font-medium leading-relaxed mt-4 max-w-2xl mx-auto font-sans">
-            A chronological timeline of Java Full Stack development, enterprise client deliveries for Florida Power & Light (FPL), and AI system engineering.
-          </p>
+                  <button
+                    onClick={openPrintableResume}
+                    className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-[#f05228] font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
+                  >
+                    <Download className="w-4 h-4 text-[#f05228] group-hover:scale-110 transition-transform" />
+                    <span>Download Resume</span>
+                  </button>
+                </div>
 
-          {/* Action Triggers */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-            <button
-              onClick={onActionClick}
-              className="px-5 py-2.5 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-xs uppercase tracking-wider rounded-xl transition-all shadow-xl cursor-pointer inline-flex items-center gap-2"
-            >
-              <FileText className="w-4 h-4" />
-              <span>Contact / Hire Me</span>
-            </button>
+                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                  <a
+                    href="https://github.com/sujithkumarchinthaginjala/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-[#f05228] font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
+                  >
+                    <Github className="w-4 h-4 text-white group-hover:text-[#f05228] transition-colors" />
+                    <span>GitHub</span>
+                  </a>
 
-            <button
-              onClick={openPrintableResume}
-              className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-[#f05228] font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
-            >
-              <Download className="w-4 h-4 text-[#f05228] group-hover:scale-110 transition-transform" />
-              <span>Download Resume</span>
-            </button>
+                  <a
+                    href="https://www.linkedin.com/in/sujithkumarchinthaginjala"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-sky-500 font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
+                  >
+                    <Linkedin className="w-4 h-4 text-sky-400 group-hover:text-sky-300 transition-colors" />
+                    <span>LinkedIn</span>
+                  </a>
+                </div>
+              </div>
 
-            <a
-              href="https://github.com/sujithkumarchinthaginjala/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-[#f05228] font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
-            >
-              <Github className="w-4 h-4 text-white group-hover:text-[#f05228] transition-colors" />
-              <span>GitHub</span>
-            </a>
-
-            <a
-              href="https://www.linkedin.com/in/sujithkumarchinthaginjala"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-sky-500 font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
-            >
-              <Linkedin className="w-4 h-4 text-sky-400 group-hover:text-sky-300 transition-colors" />
-              <span>LinkedIn</span>
-            </a>
-          </div>
-        </div>
-
-        {/* STACKED CARDS WITH SIDE PEEKS (Selected card center, non-selected peeking left & right) */}
-        <div className="my-14 relative flex flex-col items-center justify-center min-h-[460px] px-2">
-
-          {/* Card Stack Deck Canvas */}
-          <div className="relative w-full max-w-md sm:max-w-lg h-[400px] flex items-center justify-center">
-            {journeyData.map((item, idx) => {
-              const total = journeyData.length;
-              // calculate offset relative to activeIndex
-              // e.g. diff = -1 (left peek), 0 (center active), 1 (right peek)
-              let diff = idx - activeIndex;
-              if (diff < -1) diff += total;
-              if (diff > total - 2) diff -= total;
-
-              // Determine stack styling based on diff
-              const isCenter = diff === 0;
-              const isLeftPeek = diff === -1 || (diff < 0 && diff >= -2);
-              const isRightPeek = diff === 1 || (diff > 0 && diff <= 2);
-
-              // Position properties
-              let translateX = 0;
-              let scale = 1;
-              let opacity = 1;
-              let zIndex = 30;
-              let rotateY = 0;
-
-              if (isCenter) {
-                translateX = 0;
-                scale = 1.05;
-                opacity = 1;
-                zIndex = 40;
-                rotateY = 0;
-              } else if (isLeftPeek) {
-                translateX = -140; // Peek out to the left
-                scale = 0.88;
-                opacity = 0.65;
-                zIndex = 20;
-                rotateY = 8;
-              } else if (isRightPeek) {
-                translateX = 140; // Peek out to the right
-                scale = 0.88;
-                opacity = 0.65;
-                zIndex = 20;
-                rotateY = -8;
-              } else {
-                // Background hidden cards
-                translateX = 0;
-                scale = 0.75;
-                opacity = 0;
-                zIndex = 10;
-              }
-
-              return (
-                <motion.div
-                  key={item.id}
-                  onClick={() => setActiveIndex(idx)}
-                  initial={false}
-                  animate={{
-                    x: translateX,
-                    scale: scale,
-                    opacity: opacity,
-                    zIndex: zIndex,
-                    rotateY: rotateY
-                  }}
-                  transition={{ type: 'spring', stiffness: 170, damping: 26, mass: 0.9 }}
-                  style={{ willChange: 'transform, opacity' }}
-                  className={`absolute w-full h-[380px] rounded-3xl p-6 sm:p-8 border flex flex-col justify-between cursor-pointer select-none transition-shadow ${isCenter
-                      ? 'bg-zinc-950/95 border-[#f05228] shadow-[0_0_40px_rgba(240,82,40,0.3)] ring-1 ring-[#f05228]'
-                      : 'bg-zinc-900/90 border-zinc-800 hover:border-zinc-600 hover:brightness-110'
-                    }`}
-                >
-                  {/* Card Top Brand & Year */}
-                  <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${item.iconBgColor}`}
-                      >
-                        {renderIcon(item.iconType)}
-                      </div>
-                      <div className="text-left">
-                        <span className="text-[10px] font-mono text-[#f05228] font-bold uppercase tracking-wider block">
-                          {item.milestone}
-                        </span>
-                        <h3 className="font-display text-lg font-extrabold text-white uppercase tracking-tight">
-                          {item.title}
-                        </h3>
-                      </div>
-                    </div>
-
-                    <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300">
-                      {item.year}
-                    </span>
-                  </div>
-
-                  {/* Card Description */}
-                  <div className="my-auto text-left space-y-2">
-                    <div className="text-xs font-mono font-semibold text-zinc-400">
-                      {item.challengesCount}
-                    </div>
-                    <p className="text-zinc-300 text-xs sm:text-sm font-sans leading-relaxed">
-                      {item.shortDesc}
-                    </p>
-
-                    {/* Skill Tags */}
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {item.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300 uppercase font-medium"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Card Footer */}
-                  <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
-                    <span className="text-[10px] font-mono text-zinc-500 uppercase">
-                      MILESTONE 0{idx + 1} / 04
-                    </span>
-
-                    {isCenter ? (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          if (onActionClick) onActionClick();
-                        }}
-                        className="px-4 py-1.5 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-[10px] uppercase rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5"
-                      >
-                        <span>View Details</span>
-                        <ArrowRight className="w-3 h-3" />
-                      </button>
-                    ) : (
-                      <span className="text-[10px] font-mono text-[#f05228] font-bold">
-                        Click to select
-                      </span>
-                    )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Navigation Arrows for Stack Deck */}
-          <div className="mt-8 flex items-center gap-4 z-30">
-            <button
-              onClick={handlePrev}
-              aria-label="Previous journey card"
-              className="p-3 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-
-            {/* Pagination Dots */}
-            <div className="flex items-center gap-2 px-2">
-              {journeyData.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveIndex(idx)}
-                  className={`h-2 rounded-full transition-all cursor-pointer ${activeIndex === idx ? 'w-6 bg-[#f05228]' : 'w-2 bg-zinc-700'
-                    }`}
-                />
-              ))}
             </div>
 
-            <button
-              onClick={handleNext}
-              aria-label="Next journey card"
-              className="p-3 rounded-full bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer shadow-lg"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
+            {/* RIGHT COLUMN: Carousel & Pagination */}
+            <div className="lg:col-span-7 flex flex-col items-center justify-center w-full relative overflow-visible px-4 min-h-[460px] px-2">
+
+              {/* Card Stack Deck Canvas - Adjusted max-w and height to fit standard columns. Shifted down on desktop via transform. */}
+              <div className="relative w-full max-w-[340px] sm:max-w-[400px] h-[390px] flex items-center justify-center lg:translate-y-25">
+                {journeyData.map((item, idx) => {
+                  const total = journeyData.length;
+                  let diff = idx - activeIndex;
+                  if (diff < -1) diff += total;
+                  if (diff > total - 2) diff -= total;
+
+                  const isCenter = diff === 0;
+                  const isLeftPeek = diff === -1 || (diff < 0 && diff >= -2);
+                  const isRightPeek = diff === 1 || (diff > 0 && diff <= 2);
+
+                  // Position properties tuned for narrower 2-column spacing
+                  let translateX = 0;
+                  let scale = 1;
+                  let opacity = 1;
+                  let zIndex = 30;
+                  let rotateY = 0;
+
+                  if (isCenter) {
+                    translateX = 0;
+                    scale = 1.05;
+                    opacity = 1;
+                    zIndex = 40;
+                    rotateY = 0;
+                  } else if (isLeftPeek) {
+                    translateX = -110; // Reduced peek offset
+                    scale = 0.88;
+                    opacity = 0.65;
+                    zIndex = 20;
+                    rotateY = 8;
+                  } else if (isRightPeek) {
+                    translateX = 110; // Reduced peek offset
+                    scale = 0.88;
+                    opacity = 0.65;
+                    zIndex = 20;
+                    rotateY = -8;
+                  } else {
+                    translateX = 0;
+                    scale = 0.75;
+                    opacity = 0;
+                    zIndex = 10;
+                  }
+
+                  return (
+                    <motion.div
+                      key={item.id}
+                      onClick={() => setActiveIndex(idx)}
+                      initial={false}
+                      animate={{
+                        x: translateX,
+                        scale: scale,
+                        opacity: opacity,
+                        zIndex: zIndex,
+                        rotateY: rotateY
+                      }}
+                      transition={{ type: 'spring', stiffness: 170, damping: 26, mass: 0.9 }}
+                      style={{ willChange: 'transform, opacity' }}
+                      className={`absolute w-full h-[380px] rounded-3xl p-6 sm:p-7 border flex flex-col justify-between cursor-pointer select-none transition-shadow ${isCenter
+                        ? 'bg-zinc-950/95 border-[#f05228] shadow-[0_0_40px_rgba(240,82,40,0.3)] ring-1 ring-[#f05228]'
+                        : 'bg-zinc-900/90 border-zinc-800 hover:border-zinc-600 hover:brightness-110'
+                        }`}
+                    >
+                      {/* Card Top Brand & Year */}
+                      <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
+                        <div className="flex items-center gap-3">
+                          <div
+                            className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${item.iconBgColor}`}
+                          >
+                            {renderIcon(item.iconType)}
+                          </div>
+                          <div className="text-left">
+                            <span className="text-[10px] font-mono text-[#f05228] font-bold uppercase tracking-wider block">
+                              {item.milestone}
+                            </span>
+                            <h3 className="font-display text-lg font-extrabold text-white uppercase tracking-tight leading-snug">
+                              {item.title}
+                            </h3>
+                          </div>
+                        </div>
+
+                        <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 shrink-0">
+                          {item.year}
+                        </span>
+                      </div>
+
+                      {/* Card Description */}
+                      <div className="my-auto text-left space-y-2">
+                        <div className="text-xs font-mono font-semibold text-zinc-400">
+                          {item.challengesCount}
+                        </div>
+                        <p className="text-zinc-300 text-xs sm:text-sm font-sans leading-relaxed">
+                          {item.shortDesc}
+                        </p>
+
+                        {/* Skill Tags */}
+                        <div className="flex flex-wrap gap-1.5 pt-2">
+                          {item.tags.map((tag) => (
+                            <span
+                              key={tag}
+                              className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300 uppercase font-medium"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Card Footer */}
+                      <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
+                        <span className="text-[10px] font-mono text-zinc-500 uppercase">
+                          MILESTONE 0{idx + 1} / 04
+                        </span>
+
+                        {isCenter ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (onActionClick) onActionClick();
+                            }}
+                            className="px-4 py-1.5 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-[10px] uppercase rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5"
+                          >
+                            <span>View Details</span>
+                            <ArrowRight className="w-3 h-3" />
+                          </button>
+                        ) : (
+                          <span className="text-[10px] font-mono text-[#f05228] font-bold">
+                            Click to select
+                          </span>
+                        )}
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Card Navigation Controls */}
+              <div className="pt-12 flex items-center gap-4 z-30 relative lg:translate-y-18">
+                <button
+                  onClick={() => setActiveIndex((prev) => (prev === 0 ? journeyData.length - 1 : prev - 1))}
+                  aria-label="Previous journey card"
+                  className="p-3 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition-colors cursor-pointer"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                {/* Pagination Dots */}
+                <div className="flex items-center gap-2 px-2">
+                  {journeyData.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveIndex(idx)}
+                      className={`h-2 rounded-full transition-all cursor-pointer ${activeIndex === idx ? 'w-6 bg-[#f05228]' : 'w-2 bg-zinc-700'
+                        }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setActiveIndex((prev) => (prev === journeyData.length - 1 ? 0 : prev + 1))}
+                  aria-label="Next journey card"
+                  className="p-3 rounded-full bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer shadow-lg"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </div>
+
+            </div>
           </div>
 
-        </div>
-
-        {/* BOTTOM DEV EXPERIENCE CTA */}
-        <div className="text-center pt-8 border-t border-zinc-800/80 max-w-xl mx-auto space-y-3">
-          <h3 className="font-display text-xl font-extrabold uppercase text-white tracking-tight">
-            Explore Full Technical Portfolio
-          </h3>
-          <p className="text-zinc-400 text-xs sm:text-sm font-sans font-medium leading-relaxed">
-            Interested in learning more about these architectural milestones or requesting an engineering consultation?
-          </p>
-
-          <div className="pt-2">
-            <button
-              onClick={onActionClick}
-              className="px-6 py-3 bg-white text-black font-display font-extrabold text-xs uppercase tracking-wider rounded-xl hover:bg-zinc-200 transition-colors shadow-xl cursor-pointer"
-            >
-              Schedule Engineering Call
-            </button>
+          {/* Divider & Consultation CTA (Centered Below Columns) */}
+          <div className="text-center pt-12 mt-7 lg:mt-24 border-zinc-800/80 max-w-xl mx-auto space-y-3 relative z-30">
+            <h3 className="font-display text-xl font-extrabold uppercase text-white tracking-tight">
+              Engineering Consultation
+            </h3>
+            <p className="text-zinc-400 text-xs sm:text-sm font-sans font-medium leading-relaxed">
+              Interested in learning more about these architectural milestones or requesting a custom solution?
+            </p>
+            <div className="pt-2">
+              <button
+                onClick={onActionClick}
+                className="px-6 py-3 bg-white text-black font-display font-extrabold text-xs uppercase tracking-wider rounded-xl hover:bg-zinc-200 transition-colors shadow-xl cursor-pointer"
+              >
+                Schedule Engineering Call
+              </button>
+            </div>
           </div>
         </div>
-
-      </div>
-
-    </motion.section>
+      </motion.section>
+    </div>
   );
 };

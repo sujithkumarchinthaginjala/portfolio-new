@@ -92,13 +92,13 @@ export const HeroCanvasBackground: React.FC = () => {
          The canvas is sticky, so it stays fixed in the background
          while the user scrolls through the 300vh container.
        */}
-      <div className="sticky top-[64px] w-full h-[calc(100vh-64px)] overflow-hidden">
+      <div className="sticky top-0 w-full h-screen overflow-hidden">
         <canvas
           ref={canvasRef}
           className="w-full h-full object-cover opacity-60"
           style={{
-            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)'
+            maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%)'
           }}
         />
       </div>

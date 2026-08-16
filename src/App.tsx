@@ -3,7 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { motion, useMotionValue, useScroll, useTransform } from 'motion/react';
 import { NavTab, ModalState } from './types';
 import { HeaderNav } from './components/HeaderNav';
 import { HeroCenter } from './components/HeroCenter';
@@ -19,6 +20,7 @@ import { InteractiveModal } from './components/InteractiveModal';
 import { HeroCanvasBackground } from './components/HeroCanvasBackground';
 import { SecondaryCanvasBackground } from './components/SecondaryCanvasBackground';
 import { GlobalThreeBackground } from './components/GlobalThreeBackground';
+import { HeroNameHandoff } from './components/HeroNameHandoff';
 import { Grid3X3 } from 'lucide-react';
 
 export default function App() {
@@ -41,17 +43,74 @@ export default function App() {
     setModalState({ isOpen: false, type: null });
   };
 
-  return (
-    <div
-      className="relative min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between"
-      style={{
-        backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.08) 1px, transparent 1px)',
-        backgroundSize: '32px 32px'
-      }}
-    >
+  const [isLightHeader, setIsLightHeader] = React.useState(false);
+  const exploreRef = React.useRef<HTMLDivElement>(null);
+  const journeyRef = React.useRef<HTMLDivElement>(null);
+  const heroNameRef = React.useRef<HTMLHeadingElement>(null);
+  const heroNameOpacity = useMotionValue(1);
 
-      {/* Global Three.js Scene sits perfectly behind everything */}
-      <GlobalThreeBackground />
+  React.useEffect(() => {
+    const handleScrollHeader = () => {
+      if (!exploreRef.current) return;
+
+      // Sample the actual DOM element rendered at the header position (center of screen, y=75px)
+      const sampledElement = document.elementFromPoint(window.innerWidth / 2, 75);
+
+      // If the sampled element is inside ExploreSection, the header is over the light bg-white section
+      if (sampledElement && exploreRef.current.contains(sampledElement)) {
+        setIsLightHeader(true);
+      } else {
+        setIsLightHeader(false);
+      }
+    };
+
+    const handleScrollActiveTab = () => {
+      const sections: { id: string; tab: NavTab }[] = [
+        { id: 'contact', tab: 'Contact' },
+        { id: 'skills', tab: 'Skills' },
+        { id: 'projects', tab: 'Projects' },
+        { id: 'experience', tab: 'Experience' },
+        { id: 'about', tab: 'About' },
+        { id: 'home', tab: 'Home' },
+      ];
+
+      const viewportMid = window.innerHeight * 0.4;
+      for (const sec of sections) {
+        const el = document.getElementById(sec.id);
+        if (el) {
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= viewportMid && rect.bottom >= 0) {
+            setActiveTab(sec.tab);
+            return;
+          }
+        }
+      }
+    };
+
+    const handleScroll = () => {
+      handleScrollHeader();
+      handleScrollActiveTab();
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Reference for the Hero + Explore transition area
+  const heroExploreContainerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: heroScrollProgress } = useScroll({
+    target: heroExploreContainerRef,
+    offset: ["start start", "end end"]
+  });
+
+  // The window closing overlaps the last 100vh of the 300vh container.
+  // Since the scrollable distance of the container is 200vh, the last 100vh maps to progress 0.5 to 1.0.
+  const heroScale = useTransform(heroScrollProgress, [0.5, 1], [1, 0.95]);
+  const heroOpacity = useTransform(heroScrollProgress, [0.5, 1], [1, 0]);
+
+  return (
+    <div className="relative min-h-screen bg-black text-white selection:bg-white selection:text-black font-sans flex flex-col justify-between">
 
       {/* Background: Pure plain black with optional architectural dashed guidelines */}
       <GridGuidelines showGuidelines={showGuidelines} />
@@ -61,48 +120,77 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         onOpenMemberModal={handleOpenMemberModal}
+        isLightHeader={isLightHeader}
       />
 
-      {/* Hero Section Container with Scroll Animation */}
-      <div className="relative z-10 w-full h-[300vh] bg-black">
+      {/* Hero and Explore Transition Container */}
+      <div ref={heroExploreContainerRef} className="relative z-10 w-full h-[300vh] bg-black">
         <HeroCanvasBackground />
 
-        <div className="sticky top-[130px] flex flex-col justify-between h-[calc(100vh-64px)] w-full pointer-events-none">
+        {/* Hero Section Container - Sticky */}
+        <motion.div
+          style={{ scale: heroScale, willChange: 'transform' }}
+          className="sticky top-0 pt-12 sm:pt-16 flex flex-col justify-between h-screen w-full pointer-events-none origin-bottom"
+        >
           {/* Make inner content pointer-events-auto so we can interact with buttons */}
           <div className="flex-1 flex flex-col w-full pointer-events-auto">
             {/* Hero Center Display */}
-            <HeroCenter onOpenSignUpModal={handleOpenSignUpModal} />
+            <HeroCenter
+              onOpenSignUpModal={handleOpenSignUpModal}
+              scrollYProgress={heroScrollProgress}
+              nameRef={heroNameRef}
+              nameOpacity={heroNameOpacity}
+            />
           </div>
 
-          <div className="pointer-events-auto">
+          <motion.div className="pointer-events-auto" style={{ opacity: heroOpacity }}>
             {/* Footer Bar (Social Icons & Scroll Indicator) */}
             <FooterBar />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
 
-      {/* Explore Section below the fold */}
-      <ExploreSection
-        activeTab={activeTab}
-        onOpenSignUpModal={handleOpenSignUpModal}
+      {/* ExploreSection - Native Scroll Window Closing with mt-[-100vh] to overlap the sticky Hero */}
+      <div ref={exploreRef} className="relative z-20 w-full bg-[#faf0e6] shadow-[0_-30px_60px_rgba(0,0,0,0.1)] border-t border-amber-200/60 pt-10 mt-[-100vh]">
+        <ExploreSection
+          activeTab={activeTab}
+          onOpenSignUpModal={handleOpenSignUpModal}
+        />
+      </div>
+
+      <HeroNameHandoff
+        nameRef={heroNameRef}
+        exploreRef={exploreRef}
+        sourceOpacity={heroNameOpacity}
       />
 
-      {/* Professional Journey Section (between Layout 2 and Layout 3) */}
-      <JourneySection onActionClick={handleOpenSignUpModal} />
+      {/* Professional Journey & Projects (Experience) - Sticky Background with Foreground Scrolling Content */}
+      <div className="relative z-30 w-full bg-black text-white mt-[-100vh]">
+        {/* Sticky Background for Journey & Projects Sections */}
+        <div className="sticky top-0 h-screen w-full pointer-events-none overflow-hidden z-0 bg-black">
+          {/* Subtle Ambient Radial Glows */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(240,82,40,0.06),transparent_60%)] pointer-events-none" />
+          <div className="absolute top-1/3 -left-32 w-96 h-96 bg-[#f05228]/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-1/3 -right-32 w-96 h-96 bg-[#38bdf8]/10 rounded-full blur-3xl pointer-events-none" />
+        </div>
 
-      {/* Experience Section */}
-      <ExperienceSection onContactClick={handleOpenSignUpModal} />
+        {/* Foreground Content: Journey Timeline -> Projects Showcase scroll smoothly over sticky background */}
+        <div className="relative z-10 -mt-[100vh]">
+          {/* Professional Journey Section */}
+          <div ref={journeyRef}>
+            <JourneySection onActionClick={handleOpenSignUpModal} />
+          </div>
+
+          {/* Experience / Projects Section */}
+          <ExperienceSection onContactClick={handleOpenSignUpModal} />
+        </div>
+      </div>
 
       {/* Skills Section (4th Layout) */}
       <SkillsSection onExploreClick={handleOpenSignUpModal} />
 
       {/* Certifications & Honors Section (5th Layout) */}
       <CertificationsSection onVerifyClick={(cert) => handleOpenSignUpModal()} />
-
-      {/* Secondary Scroll Motion Background (Moved before Contact) */}
-      <div className="relative z-10 w-full h-[300vh] bg-black">
-        <SecondaryCanvasBackground />
-      </div>
 
       {/* Contact Us Section */}
       <ContactSection onSuccess={handleOpenSignUpModal} />

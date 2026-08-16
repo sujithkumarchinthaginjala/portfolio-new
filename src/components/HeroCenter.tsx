@@ -1,18 +1,26 @@
 import React from 'react';
-import { motion } from 'motion/react';
+import { motion, MotionValue, useTransform } from 'motion/react';
 import { Code, Terminal, Sparkles, Send, FileText, Download } from 'lucide-react';
 import { openPrintableResume, downloadResume } from '../utils/downloadResume';
 import { EASE_OUT } from '../utils/animations';
 
 interface HeroCenterProps {
   onOpenSignUpModal: () => void;
+  scrollYProgress?: MotionValue<number>;
+  nameRef: React.RefObject<HTMLHeadingElement | null>;
+  nameOpacity: MotionValue<number>;
 }
 
-export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => {
+export const HeroCenter: React.FC<HeroCenterProps> = ({
+  onOpenSignUpModal,
+  scrollYProgress,
+  nameRef,
+  nameOpacity
+}) => {
   return (
     <div id="home" className="relative z-10 w-full flex-1 flex flex-col items-center justify-center px-6 md:px-12 max-w-7xl mx-auto my-auto py-12 min-h-[62vh]">
       <div className="w-full grid grid-cols-1 md:grid-cols-12 items-center gap-8 my-auto">
-        
+
         {/* Left Column: Stylized Tagline Paragraph with Bold Typography micro labels */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
@@ -71,13 +79,17 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => 
           transition={{ duration: 1.1, ease: EASE_OUT }}
           className="md:col-span-7 flex flex-col items-center md:items-end text-center md:text-right order-1 md:order-2"
         >
-          <h1 className="font-display text-[55px] sm:text-[95px] md:text-[110px] lg:text-[135px] font-extrabold uppercase tracking-[-0.04em] text-white leading-[0.88] select-none">
+          <motion.h1
+            ref={nameRef}
+            style={{ opacity: nameOpacity }}
+            className="font-display text-[55px] sm:text-[95px] md:text-[110px] lg:text-[135px] font-extrabold uppercase tracking-[-0.04em] leading-[0.88] select-none text-white"
+          >
             SUJITH
-          </h1>
-          <div className="font-display text-[30px] sm:text-[50px] md:text-[60px] lg:text-[75px] font-extrabold uppercase tracking-[-0.02em] text-[#f05228] leading-[0.95] select-none">
+          </motion.h1>
+          <div className="font-display text-[30px] sm:text-[50px] md:text-[60px] lg:text-[75px] font-extrabold uppercase tracking-[-0.02em] text-[#f05228] leading-[0.95] select-none -mt-2">
             KUMAR
           </div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -103,7 +115,7 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({ onOpenSignUpModal }) => 
           {/* Subtle Outer Rings */}
           <div className="absolute -inset-5 rounded-full border border-[#f05228]/40 animate-ping opacity-30 pointer-events-none" />
           <div className="absolute -inset-3 rounded-full border border-zinc-700/60 group-hover:scale-110 transition-transform duration-500 bg-zinc-900/50" />
-          
+
           {/* Main Solid Badge */}
           <motion.button
             whileHover={{ scale: 1.08 }}

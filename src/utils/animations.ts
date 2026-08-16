@@ -48,8 +48,6 @@ export function useSectionScrollFx(ref: RefObject<HTMLElement | null>) {
   // Reveal early, hold on a long plateau, release late.
   const opacity = useTransform(scrollYProgress, [0, 0.16, 0.86, 1], [0, 1, 1, 0]);
   const y = useTransform(scrollYProgress, [0, 0.16, 0.9, 1], [34, 0, 0, -24]);
-  const blur = useTransform(scrollYProgress, [0, 0.13, 0.88, 1], [4, 0, 0, 3]);
-  const filter = useMotionTemplate`blur(${blur}px)`;
 
   if (prefersReduced) return {} as const;
 
@@ -57,8 +55,7 @@ export function useSectionScrollFx(ref: RefObject<HTMLElement | null>) {
     style: {
       opacity,
       y,
-      filter,
-      willChange: 'transform, opacity, filter',
+      willChange: 'transform, opacity',
     },
   } as const;
 }
@@ -101,17 +98,15 @@ export const revealViewport = { once: true, margin: '-80px' } as const;
  * blurs; incoming content arrives from the opposite side and sharpens.
  */
 export const switchPanel: Variants = {
-  initial: { opacity: 0, x: 16, filter: 'blur(6px)' },
+  initial: { opacity: 0, x: 16 },
   animate: {
     opacity: 1,
     x: 0,
-    filter: 'blur(0px)',
     transition: { duration: 0.5, ease: EASE_OUT },
   },
   exit: {
     opacity: 0,
     x: -16,
-    filter: 'blur(6px)',
     transition: { duration: 0.35, ease: EASE_IN_OUT },
   },
 };
