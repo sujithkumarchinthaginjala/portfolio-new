@@ -50,20 +50,6 @@ export default function App() {
   const heroNameOpacity = useMotionValue(1);
 
   React.useEffect(() => {
-    const handleScrollHeader = () => {
-      if (!exploreRef.current) return;
-
-      // Sample the actual DOM element rendered at the header position (center of screen, y=75px)
-      const sampledElement = document.elementFromPoint(window.innerWidth / 2, 75);
-
-      // If the sampled element is inside ExploreSection, the header is over the light bg-white section
-      if (sampledElement && exploreRef.current.contains(sampledElement)) {
-        setIsLightHeader(true);
-      } else {
-        setIsLightHeader(false);
-      }
-    };
-
     const handleScrollActiveTab = () => {
       const sections: { id: string; tab: NavTab }[] = [
         { id: 'contact', tab: 'Contact' },
@@ -87,14 +73,9 @@ export default function App() {
       }
     };
 
-    const handleScroll = () => {
-      handleScrollHeader();
-      handleScrollActiveTab();
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScrollActiveTab, { passive: true });
+    handleScrollActiveTab();
+    return () => window.removeEventListener('scroll', handleScrollActiveTab);
   }, []);
 
   // Reference for the Hero + Explore transition area
@@ -151,7 +132,7 @@ export default function App() {
       </div>
 
       {/* ExploreSection - Native Scroll Window Closing with mt-[-100vh] to overlap the sticky Hero */}
-      <div ref={exploreRef} className="relative z-20 w-full bg-[#faf0e6] shadow-[0_-30px_60px_rgba(0,0,0,0.1)] border-t border-amber-200/60 pt-10 mt-[-100vh]">
+      <div ref={exploreRef} className="relative z-20 w-full bg-black shadow-[0_-30px_60px_rgba(0,0,0,0.8)] border-t border-white/10 pt-10 mt-[-100vh]">
         <ExploreSection
           activeTab={activeTab}
           onOpenSignUpModal={handleOpenSignUpModal}
