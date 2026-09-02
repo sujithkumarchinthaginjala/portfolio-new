@@ -14,13 +14,13 @@ import { ExperienceSection } from './components/ExperienceSection';
 import { SkillsSection } from './components/SkillsSection';
 import { CertificationsSection } from './components/CertificationsSection';
 import { ContactSection } from './components/ContactSection';
-import { JourneySection } from './components/JourneySection';
 import { ExploreSection } from './components/ExploreSection';
 import { InteractiveModal } from './components/InteractiveModal';
 import { HeroCanvasBackground } from './components/HeroCanvasBackground';
 import { SecondaryCanvasBackground } from './components/SecondaryCanvasBackground';
 import { GlobalThreeBackground } from './components/GlobalThreeBackground';
 import { HeroNameHandoff } from './components/HeroNameHandoff';
+import { SectionDissolveTransition } from './components/SectionDissolveTransition';
 import { Grid3X3 } from 'lucide-react';
 
 export default function App() {
@@ -145,26 +145,9 @@ export default function App() {
         sourceOpacity={heroNameOpacity}
       />
 
-      {/* Professional Journey & Projects (Experience) - Sticky Background with Foreground Scrolling Content */}
-      <div className="relative z-30 w-full bg-black text-white mt-[-100vh]">
-        {/* Sticky Background for Journey & Projects Sections */}
-        <div className="sticky top-0 h-screen w-full pointer-events-none overflow-hidden z-0 bg-black">
-          {/* Subtle Ambient Radial Glows */}
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(240,82,40,0.06),transparent_60%)] pointer-events-none" />
-          <div className="absolute top-1/3 -left-32 w-96 h-96 bg-[#f05228]/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-1/3 -right-32 w-96 h-96 bg-[#38bdf8]/10 rounded-full blur-3xl pointer-events-none" />
-        </div>
-
-        {/* Foreground Content: Journey Timeline -> Projects Showcase scroll smoothly over sticky background */}
-        <div className="relative z-10 -mt-[100vh]">
-          {/* Professional Journey Section */}
-          <div ref={journeyRef}>
-            <JourneySection onActionClick={handleOpenSignUpModal} />
-          </div>
-
-          {/* Experience / Projects Section */}
-          <ExperienceSection onContactClick={handleOpenSignUpModal} />
-        </div>
+      {/* Experience / Projects Section */}
+      <div ref={journeyRef}>
+        <ExperienceSection onContactClick={handleOpenSignUpModal} />
       </div>
 
       {/* Skills Section (4th Layout) */}

@@ -11,7 +11,7 @@ export const FooterBar: React.FC = () => {
   };
 
   return (
-    <footer className="relative z-20 w-full pt-8 pb-8 px-6 md:px-12 max-w-7xl mx-auto flex flex-col md:flex-row items-center md:items-end justify-between gap-6 border-t border-zinc-800">
+    <footer className="relative z-20 w-full pt-8 pb-8 px-6 sm:px-12 lg:px-16 flex flex-col md:flex-row items-center md:items-end justify-between gap-6 border-t border-zinc-800">
       {/* Bottom Left: Paragraph summary & Social Media Links */}
       <div className="flex flex-col gap-4 max-w-sm text-center md:text-left">
         <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed font-sans">

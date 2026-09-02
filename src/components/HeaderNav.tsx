@@ -70,7 +70,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
           : 'bg-zinc-950 border-b border-zinc-800 shadow-md text-white'
         }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-3 flex flex-col md:flex-row items-center justify-between gap-3 relative z-10">
+      <div className="w-full px-6 sm:px-12 lg:px-16 py-3 flex flex-col md:flex-row items-center justify-between gap-3 relative z-10">
         {/* Left Metadata & Identity */}
         <div className="flex items-center gap-3">
           <a href="#home" className="flex flex-col items-center md:items-start group">

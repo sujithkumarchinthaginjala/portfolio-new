@@ -52,7 +52,7 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ onSuccess }) => 
       ref={sectionRef}
       {...scrollFx}
       id="contact"
-      className="relative z-10 w-full py-24 px-6 md:px-12 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
+      className="relative z-10 w-full py-28 px-6 sm:px-12 lg:px-16 text-white border-t border-zinc-800/80 overflow-hidden"
     >
       
       {/* Background Glowing 3D Globe Visual */}

@@ -55,11 +55,14 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
     [0, 0, -120, -120, -150]
   );
 
+  // Clock fades out completely during transition (0.64 - 0.76) and is strictly hidden during Journey section
   const wallpaperOpacity = useTransform(
     scrollYProgress,
-    [0, 0.15, 0.78, 0.96],
-    [0.92, 1, 1, 0.2]
+    [0, 0.15, 0.64, 0.76, 1],
+    [0.92, 1, 1, 0, 0]
   );
+
+  const wallpaperDisplay = useTransform(scrollYProgress, (v) => (v >= 0.80 ? 'none' : 'flex'));
 
   // 12 hour positions matching theme color (#f05228)
   const indices = [
@@ -81,9 +84,15 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
   const dialRadius = 310; // px distance from center to marker center
 
   return (
-    <div className="absolute inset-0 bg-[#000000] overflow-hidden pointer-events-none z-0 flex items-center justify-center select-none">
+    <motion.div
+      style={{
+        display: wallpaperDisplay,
+        opacity: wallpaperOpacity,
+      }}
+      className="absolute inset-0 bg-[#000000] overflow-hidden pointer-events-none z-0 items-center justify-center select-none"
+    >
       {/* 1. Grand Deep Atmospheric Portfolio Theme Glow (Fiery Amber/Orange #f05228 Ambient Lighting) */}
-      <div 
+      <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background: `
@@ -131,7 +140,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
                 }}
               >
                 {/* Outer Orange Glow Halo */}
-                <div 
+                <div
                   className="absolute inset-0 rounded-full blur-lg opacity-90"
                   style={{
                     background: 'radial-gradient(ellipse at center, rgba(240, 82, 40, 0.9) 0%, rgba(234, 88, 12, 0.5) 60%, transparent 100%)',
@@ -177,7 +186,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
               }}
             >
               {/* Outer Orange Glow Halo */}
-              <div 
+              <div
                 className="absolute inset-0 rounded-full blur-md opacity-85"
                 style={{
                   background: 'radial-gradient(circle at center, rgba(240, 82, 40, 0.8) 0%, rgba(234, 88, 12, 0.4) 60%, transparent 100%)',
@@ -222,7 +231,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
           {/* Subtle Ambient Hand Drop Shadow */}
           <div className="absolute inset-0 bg-black/75 blur-[4px] translate-y-1.5 translate-x-1" />
           {/* Metallic Tapered Needle */}
-          <div 
+          <div
             className="relative w-full h-full rounded-full border border-orange-300/35 shadow-[0_0_14px_rgba(240,82,40,0.6)]"
             style={{
               background: 'linear-gradient(to top, #1c0b05 0%, #ea580c 55%, #fed7aa 100%)',
@@ -246,7 +255,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
           {/* Subtle Hand Drop Shadow */}
           <div className="absolute inset-0 bg-black/75 blur-[4px] translate-y-1.5 translate-x-1" />
           {/* Sleek Extended Needle */}
-          <div 
+          <div
             className="relative w-full h-full rounded-full border border-orange-200/50 shadow-[0_0_20px_rgba(240,82,40,0.8)]"
             style={{
               background: 'linear-gradient(to top, #1c0b05 0%, #f05228 50%, #ffffff 100%)',
@@ -270,7 +279,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
             transform: `translate(-50%, 0%) rotate(${minuteAngle}deg)`,
           }}
         >
-          <div 
+          <div
             className="w-full h-full rounded-full"
             style={{
               background: 'linear-gradient(to bottom, #f05228, #1c0b05)',
@@ -292,9 +301,9 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
         >
           {/* Second Hand Drop Shadow */}
           <div className="absolute inset-0 bg-black/60 blur-[2px] translate-y-1.5 translate-x-1" />
-          
+
           {/* Second Hand Stem in Theme Orange with High-Glow Tip */}
-          <div 
+          <div
             className="relative w-full h-full rounded-full shadow-[0_0_12px_rgba(240,82,40,0.9)]"
             style={{
               background: 'linear-gradient(to top, #ea580c 0%, #f05228 70%, #ffedd5 100%)',
@@ -317,7 +326,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
             transform: `translate(-50%, 0%) rotate(${secondAngle}deg)`,
           }}
         >
-          <div 
+          <div
             className="w-full h-full rounded-full bg-[#f05228] relative flex flex-col items-center justify-end"
           >
             {/* Counterbalance Ring */}
@@ -327,7 +336,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
 
         {/* 6. Center Beveled Metallic Pivot Knob (Pin) in Theme Orange / Gold (Scaled to 32px) */}
         <div className="relative z-30 w-8 h-8 rounded-full border border-orange-300/80 shadow-[0_3px_15px_rgba(0,0,0,0.95),0_0_22px_rgba(240,82,40,0.8)] flex items-center justify-center">
-          <div 
+          <div
             className="w-full h-full rounded-full"
             style={{
               background: `
@@ -346,7 +355,7 @@ export const LuxuryClockWallpaper: React.FC<LuxuryClockWallpaperProps> = ({
         </div>
 
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 

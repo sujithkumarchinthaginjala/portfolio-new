@@ -87,7 +87,7 @@ export const ExperienceSection: React.FC<ExperienceSectionProps> = ({ onContactC
       ref={sectionRef}
       {...scrollFx}
       id="projects"
-      className="relative z-10 w-full py-16 px-4 sm:px-8 max-w-7xl mx-auto text-white overflow-hidden"
+      className="relative z-10 w-full py-20 px-6 sm:px-12 lg:px-16 text-white overflow-hidden"
     >
       {/* Section Header (Side-by-Side) */}
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">

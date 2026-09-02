@@ -1,392 +1,399 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useTransform } from 'motion/react';
-import { useSectionScrollFx } from '../utils/animations';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Zap,
-  Globe,
-  Layers,
-  FileText,
-  Download,
-  Github,
-  Linkedin,
-  ChevronLeft,
-  ChevronRight,
-  CheckCircle2,
   Briefcase,
   Code2,
   Terminal,
-  Award
+  Award,
+  Calendar,
+  Building2,
+  CheckCircle2,
+  Sparkles,
+  ChevronRight,
+  Maximize2
 } from 'lucide-react';
-import { openPrintableResume } from '../utils/downloadResume';
-import { JourneyItem } from '../types';
 
-interface JourneySectionProps {
-  onActionClick?: () => void;
+export interface ExperienceItem {
+  id: string;
+  role: string;
+  company: string;
+  period: string;
+  milestone: string;
+  solidBg: string;
+  accentContrastBg: string;
+  tagBg: string;
+  shadowColor: string;
+  iconType: 'inu' | 'fpl' | 'coincent' | 'education';
+  shortDesc: string;
+  bulletPoints: string[];
+  skills: string[];
+  codeTag: string;
 }
 
-export const journeyData: JourneyItem[] = [
+export const professionalExperiences: ExperienceItem[] = [
   {
     id: 'inu-tech',
-    title: 'Java Full Stack Developer',
-    challengesCount: 'INU Technology Solutions',
-    buildersCount: 'Dec 2024 - Now',
-    iconBgColor: 'bg-gradient-to-tr from-[#f05228] to-amber-500',
-    glowColor: 'from-[#f05228]/60 via-orange-600/30 to-transparent',
-    accentHex: '#f05228',
-    iconType: 'inu',
-    shortDesc: 'Developing enterprise web applications using Java, Spring Boot, Angular, and Vue 3. Designing RESTful APIs and SQL operations.',
+    role: 'Java Full Stack Developer',
+    company: 'INU Technology Solutions',
+    period: 'Dec 2024 — Present',
     milestone: 'Current Role',
-    year: 'Dec 2024 - Now',
-    tags: ['Java', 'Spring Boot', 'Angular', 'Vue 3', 'REST APIs', 'SQL']
+    solidBg: 'bg-[#ea580c]',
+    accentContrastBg: 'bg-[#9a3412]',
+    tagBg: 'bg-black/30',
+    shadowColor: 'rgba(234, 88, 12, 0.45)',
+    iconType: 'inu',
+    codeTag: '# 01 · ENTERPRISE FULL STACK',
+    shortDesc: 'Developing enterprise web applications using Java, Spring Boot, Angular, and Vue 3. Designing scalable RESTful APIs, optimizing MySQL queries, and implementing reactive component workflows.',
+    bulletPoints: [
+      'Designed and deployed secure, high-throughput RESTful microservices with Spring Boot.',
+      'Constructed state-managed front-end workflows in Angular 21 and Vue 3 with reactive component systems.',
+      'Optimized complex SQL schemas and database queries, achieving low-latency transactions.',
+      'Collaborated within Agile sprint cadences to deliver production-ready features.'
+    ],
+    skills: ['Java 17', 'Spring Boot', 'Angular 21', 'Vue 3', 'REST APIs', 'MySQL', 'Agile']
   },
   {
     id: 'fpl-client',
-    title: 'Full Stack Engineer',
-    challengesCount: 'Client: Florida Power & Light (FPL)',
-    buildersCount: 'Dec 2024 - Now',
-    iconBgColor: 'bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600',
-    glowColor: 'from-sky-600/50 via-blue-600/30 to-transparent',
-    accentHex: '#38bdf8',
-    iconType: 'fpl',
-    shortDesc: 'Developed enterprise Correspondence Management Systems (CMS) with Angular 21 & Spring Boot, and Assist Portal with Vue 3.',
+    role: 'Full Stack Engineer',
+    company: 'Florida Power & Light (FPL)',
+    period: 'Dec 2024 — Present',
     milestone: 'Enterprise Client',
-    year: 'Dec 2024 - Now',
-    tags: ['Angular 21', 'Vue 3', 'Spring Boot', 'MySQL', 'Agile']
+    solidBg: 'bg-[#0284c7]',
+    accentContrastBg: 'bg-[#0369a1]',
+    tagBg: 'bg-black/30',
+    shadowColor: 'rgba(2, 132, 199, 0.45)',
+    iconType: 'fpl',
+    codeTag: '# 02 · ENERGY ENTERPRISE',
+    shortDesc: 'Developed Correspondence Management System (CMS) with Angular 21 & Spring Boot, and interactive Assist Portal with Vue 3 for utility operations.',
+    bulletPoints: [
+      'Architected the Correspondence Management System (CMS) in Angular 21 with dynamic document templating.',
+      'Developed the Vue 3 Assist Portal featuring client-side reactive form validations and real-time status tracking.',
+      'Implemented transactional Spring Boot microservices integrating with enterprise MySQL databases.',
+      'Ensured seamless cross-browser responsiveness and 99.9% platform availability.'
+    ],
+    skills: ['Angular 21', 'Vue 3', 'Spring Boot', 'MySQL', 'Enterprise CMS', 'TypeScript']
   },
   {
     id: 'coincent-ai',
-    title: 'AI with Python Intern',
-    challengesCount: 'Coincent',
-    buildersCount: 'Oct 2021 - Dec 2021',
-    iconBgColor: 'bg-gradient-to-tr from-purple-600 via-pink-600 to-rose-500',
-    glowColor: 'from-purple-600/50 via-pink-600/30 to-transparent',
-    accentHex: '#d8b4fe',
-    iconType: 'coincent',
-    shortDesc: 'Developed a Face Mask Recognition application using Python, TensorFlow, NumPy, and Pandas. Data preprocessing and CNN classification.',
+    role: 'AI Engineering Intern',
+    company: 'Coincent',
+    period: 'Oct 2021 — Dec 2021',
     milestone: 'Machine Learning',
-    year: '2021',
-    tags: ['Python', 'TensorFlow', 'NumPy', 'Pandas', 'Image Processing']
+    solidBg: 'bg-[#7c3aed]',
+    accentContrastBg: 'bg-[#5b21b6]',
+    tagBg: 'bg-black/30',
+    shadowColor: 'rgba(124, 58, 237, 0.45)',
+    iconType: 'coincent',
+    codeTag: '# 03 · COMPUTER VISION',
+    shortDesc: 'Developed real-time Face Mask Recognition system using Python, TensorFlow, NumPy, and OpenCV image processing pipelines.',
+    bulletPoints: [
+      'Constructed deep convolutional neural network (CNN) architectures in TensorFlow / Keras.',
+      'Applied OpenCV image transformation and augmentation pipelines for real-world lighting resilience.',
+      'Preprocessed large visual datasets using NumPy and Pandas for accelerated training convergence.',
+      'Achieved high precision classification rates across diverse real-time test streams.'
+    ],
+    skills: ['Python', 'TensorFlow', 'OpenCV', 'NumPy', 'Pandas', 'CNNs']
   },
   {
     id: 'aits-education',
-    title: 'B.Tech in ECE',
-    challengesCount: 'Annamacharya Institute of Tech (AITS)',
-    buildersCount: '2020 - 2024',
-    iconBgColor: 'bg-gradient-to-tr from-emerald-500 to-teal-600',
-    glowColor: 'from-emerald-600/40 via-teal-600/20 to-transparent',
-    accentHex: '#10b981',
+    role: 'B.Tech in Electronics & Comm.',
+    company: 'Annamacharya Inst. of Tech',
+    period: '2020 — 2024',
+    milestone: 'Distinction 8.5 CGPA',
+    solidBg: 'bg-[#059669]',
+    accentContrastBg: 'bg-[#065f46]',
+    tagBg: 'bg-black/30',
+    shadowColor: 'rgba(5, 150, 105, 0.45)',
     iconType: 'education',
-    shortDesc: 'Graduated with 8.5/10 CGPA. Specialized in Electronics & Communication, Software Engineering, DBMS, and Object-Oriented Java.',
-    milestone: 'Academic Distinction',
-    year: '2020 - 2024',
-    tags: ['ECE', 'CGPA: 8.5/10', 'DBMS', 'Data Structures', 'Java']
+    codeTag: '# 04 · GRADUATE DISTINCTION',
+    shortDesc: 'Graduated with 8.5/10 CGPA. Specialized in Object-Oriented Programming (Java), Data Structures, DBMS, and Systems Engineering.',
+    bulletPoints: [
+      'Comprehensive coursework in Java OOP, Data Structures & Algorithms, and Relational DBMS.',
+      'Authored engineering capstone projects integrating embedded firmware and web interfaces.',
+      'Participated in collegiate competitive programming and technical hackathons.'
+    ],
+    skills: ['Java OOP', 'Data Structures', 'DBMS & SQL', 'Computer Networks', 'CGPA 8.5/10']
   }
 ];
 
-export const JourneySection: React.FC<JourneySectionProps> = ({ onActionClick }) => {
-  const scrollTrackRef = useRef<HTMLDivElement>(null);
-  const sectionRef = useRef<HTMLElement>(null);
-  const scrollFx = useSectionScrollFx(scrollTrackRef);
-  const [activeIndex, setActiveIndex] = useState<number>(0);
-  const [isDesktop, setIsDesktop] = useState<boolean>(false);
+export const renderExperienceIcon = (type: ExperienceItem['iconType']) => {
+  switch (type) {
+    case 'inu':
+      return <Briefcase className="w-5 h-5 text-white" />;
+    case 'fpl':
+      return <Code2 className="w-5 h-5 text-white" />;
+    case 'coincent':
+      return <Terminal className="w-5 h-5 text-white" />;
+    case 'education':
+      return <Award className="w-5 h-5 text-white" />;
+    default:
+      return <Briefcase className="w-5 h-5 text-white" />;
+  }
+};
 
-  const activeItem = journeyData[activeIndex];
+// Clean, Symmetric Hover-Expand & Hover-Close for both Mini Preview and Full Content
+export const JourneyExperienceDeck: React.FC = () => {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
 
-  // Detect desktop screen width responsive logic
-  useEffect(() => {
-    const checkIsDesktop = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    checkIsDesktop();
-    window.addEventListener('resize', checkIsDesktop);
-    return () => window.removeEventListener('resize', checkIsDesktop);
-  }, []);
-
-
-
-  const renderIcon = (type: JourneyItem['iconType']) => {
-    switch (type) {
-      case 'inu':
-        return <Briefcase className="w-7 h-7 text-white" />;
-      case 'fpl':
-        return <Code2 className="w-7 h-7 text-white" />;
-      case 'coincent':
-        return <Terminal className="w-7 h-7 text-white" />;
-      case 'education':
-        return <Award className="w-7 h-7 text-white" />;
-      case 'axon':
-        return <Zap className="w-7 h-7 text-white fill-white" />;
-      default:
-        return <Briefcase className="w-7 h-7 text-white" />;
+  const handleCardClick = (index: number) => {
+    if (clickedIndex !== index) {
+      setClickedIndex(index);
     }
+  };
+
+  const handleDeckMouseLeave = () => {
+    setHoveredIndex(null);
+    setClickedIndex(null);
   };
 
   return (
     <div
-      ref={scrollTrackRef}
-      id="experience"
-      className="relative w-full py-20 lg:py-28"
+      onMouseLeave={handleDeckMouseLeave}
+      className="relative w-full mx-auto flex flex-col items-center justify-center select-none"
     >
-      <motion.section
-        ref={sectionRef}
-        className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-8 text-white overflow-hidden"
-      >
-        <div className="relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
+      {/* Top Status Hint */}
+      <div className="w-full flex items-center justify-between px-2 text-[11px] font-mono text-zinc-400 pb-3">
+        <span className="flex items-center gap-1.5 text-zinc-300">
+          <Sparkles className="w-3.5 h-3.5 text-[#f05228]" />
+          Hover for preview · Click for full view · Move away to close
+        </span>
+        <span className="text-zinc-500 font-bold">
+          {clickedIndex !== null
+            ? `Milestone 0${clickedIndex + 1} Full View`
+            : hoveredIndex !== null
+            ? `Milestone 0${hoveredIndex + 1} Preview`
+            : 'All Cards Closed'}
+        </span>
+      </div>
 
-            {/* LEFT COLUMN: Section Header & Actions (Sticky on desktop) */}
-            <div className="lg:col-span-5 lg:sticky lg:top-28 space-y-8 text-center lg:text-left">
-              {/* Top Eyebrow Badge */}
-              <div className="flex justify-center lg:justify-start">
-                <span className="inline-block px-3.5 py-1 rounded-md bg-[#f05228]/15 border border-[#f05228]/30 text-[#f05228] text-[10px] sm:text-xs font-mono font-semibold tracking-widest uppercase">
-                  CAREER TIMELINE & EXPERIENCE
-                </span>
-              </div>
+      {/* ========================================================================= */}
+      {/* SOLID COLOR ACCORDION STACK                                               */}
+      {/* ========================================================================= */}
+      <div className="relative w-full flex flex-col gap-3">
+        {professionalExperiences.map((exp, index) => {
+          const isFullContent = clickedIndex === index;
+          const isMiniContent = hoveredIndex === index && !isFullContent;
+          const isClosed = !isFullContent && !isMiniContent;
 
-              {/* Section Main Title */}
-              <div>
-                <h2 className="font-display text-4xl sm:text-5xl font-extrabold uppercase tracking-tight text-white leading-tight">
-                  Professional <br />
-                  <span className="text-zinc-200">Experience Journey.</span>
-                </h2>
-                <p className="text-zinc-400 text-xs sm:text-sm font-medium leading-relaxed mt-4 max-w-2xl font-sans">
-                  A chronological timeline of Java Full Stack development, enterprise client deliveries for Florida Power & Light (FPL), and AI system engineering.
-                </p>
-              </div>
+          // Numeric interpolation ensures 100% identical smooth easing for both mini and full close
+          const targetHeight = isFullContent ? 440 : isMiniContent ? 210 : 58;
 
-              {/* Action Triggers */}
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+          return (
+            <div
+              key={exp.id}
+              className="relative w-full"
+              onMouseEnter={() => setHoveredIndex(index)}
+              onMouseLeave={() => {
+                setHoveredIndex((curr) => (curr === index ? null : curr));
+                setClickedIndex((curr) => (curr === index ? null : curr));
+              }}
+            >
+              {/* Backlit Glow */}
+              {(isMiniContent || isFullContent) && (
+                <motion.div
+                  layoutId="solid-card-glow"
+                  className="absolute -inset-2.5 rounded-[32px] blur-2xl pointer-events-none"
+                  style={{
+                    backgroundColor: exp.shadowColor,
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+              )}
 
-                  <button
-                    onClick={openPrintableResume}
-                    className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-[#f05228] font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
-                  >
-                    <Download className="w-4 h-4 text-[#f05228] group-hover:scale-110 transition-transform" />
-                    <span>Download Resume</span>
-                  </button>
-                </div>
-
-                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                  <a
-                    href="https://github.com/sujithkumarchinthaginjala/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-[#f05228] font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
-                  >
-                    <Github className="w-4 h-4 text-white group-hover:text-[#f05228] transition-colors" />
-                    <span>GitHub</span>
-                  </a>
-
-                  <a
-                    href="https://www.linkedin.com/in/sujithkumarchinthaginjala"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-5 py-2.5 bg-zinc-900/90 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 hover:border-sky-500 font-display font-bold text-xs uppercase tracking-wider rounded-xl transition-all cursor-pointer inline-flex items-center gap-2 group"
-                  >
-                    <Linkedin className="w-4 h-4 text-sky-400 group-hover:text-sky-300 transition-colors" />
-                    <span>LinkedIn</span>
-                  </a>
-                </div>
-              </div>
-
-            </div>
-
-            {/* RIGHT COLUMN: Carousel & Pagination */}
-            <div className="lg:col-span-7 flex flex-col items-center justify-center w-full relative overflow-visible px-4 min-h-[460px] px-2">
-
-              {/* Card Stack Deck Canvas - Adjusted max-w and height to fit standard columns. Shifted down on desktop via transform. */}
-              <div className="relative w-full max-w-[340px] sm:max-w-[400px] h-[390px] flex items-center justify-center lg:translate-y-25">
-                {journeyData.map((item, idx) => {
-                  const total = journeyData.length;
-                  let diff = idx - activeIndex;
-                  if (diff < -1) diff += total;
-                  if (diff > total - 2) diff -= total;
-
-                  const isCenter = diff === 0;
-                  const isLeftPeek = diff === -1 || (diff < 0 && diff >= -2);
-                  const isRightPeek = diff === 1 || (diff > 0 && diff <= 2);
-
-                  // Position properties tuned for narrower 2-column spacing
-                  let translateX = 0;
-                  let scale = 1;
-                  let opacity = 1;
-                  let zIndex = 30;
-                  let rotateY = 0;
-
-                  if (isCenter) {
-                    translateX = 0;
-                    scale = 1.05;
-                    opacity = 1;
-                    zIndex = 40;
-                    rotateY = 0;
-                  } else if (isLeftPeek) {
-                    translateX = -110; // Reduced peek offset
-                    scale = 0.88;
-                    opacity = 0.65;
-                    zIndex = 20;
-                    rotateY = 8;
-                  } else if (isRightPeek) {
-                    translateX = 110; // Reduced peek offset
-                    scale = 0.88;
-                    opacity = 0.65;
-                    zIndex = 20;
-                    rotateY = -8;
-                  } else {
-                    translateX = 0;
-                    scale = 0.75;
-                    opacity = 0;
-                    zIndex = 10;
-                  }
-
-                  return (
-                    <motion.div
-                      key={item.id}
-                      onClick={() => setActiveIndex(idx)}
-                      initial={false}
-                      animate={{
-                        x: translateX,
-                        scale: scale,
-                        opacity: opacity,
-                        zIndex: zIndex,
-                        rotateY: rotateY
-                      }}
-                      transition={{ type: 'spring', stiffness: 170, damping: 26, mass: 0.9 }}
-                      style={{ willChange: 'transform, opacity' }}
-                      className={`absolute w-full h-[380px] rounded-3xl p-6 sm:p-7 border flex flex-col justify-between cursor-pointer select-none transition-shadow ${isCenter
-                        ? 'bg-zinc-950/95 border-[#f05228] shadow-[0_0_40px_rgba(240,82,40,0.3)] ring-1 ring-[#f05228]'
-                        : 'bg-zinc-900/90 border-zinc-800 hover:border-zinc-600 hover:brightness-110'
-                        }`}
-                    >
-                      {/* Card Top Brand & Year */}
-                      <div className="flex items-center justify-between border-b border-zinc-800/80 pb-4">
-                        <div className="flex items-center gap-3">
-                          <div
-                            className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${item.iconBgColor}`}
-                          >
-                            {renderIcon(item.iconType)}
-                          </div>
-                          <div className="text-left">
-                            <span className="text-[10px] font-mono text-[#f05228] font-bold uppercase tracking-wider block">
-                              {item.milestone}
-                            </span>
-                            <h3 className="font-display text-lg font-extrabold text-white uppercase tracking-tight leading-snug">
-                              {item.title}
-                            </h3>
-                          </div>
-                        </div>
-
-                        <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-zinc-900 border border-zinc-800 text-zinc-300 shrink-0">
-                          {item.year}
-                        </span>
-                      </div>
-
-                      {/* Card Description */}
-                      <div className="my-auto text-left space-y-2">
-                        <div className="text-xs font-mono font-semibold text-zinc-400">
-                          {item.challengesCount}
-                        </div>
-                        <p className="text-zinc-300 text-xs sm:text-sm font-sans leading-relaxed">
-                          {item.shortDesc}
-                        </p>
-
-                        {/* Skill Tags */}
-                        <div className="flex flex-wrap gap-1.5 pt-2">
-                          {item.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="px-2.5 py-1 rounded bg-zinc-900 border border-zinc-800 text-[10px] font-mono text-zinc-300 uppercase font-medium"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Card Footer */}
-                      <div className="pt-4 border-t border-zinc-800/80 flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-zinc-500 uppercase">
-                          MILESTONE 0{idx + 1} / 04
-                        </span>
-
-                        {isCenter ? (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (onActionClick) onActionClick();
-                            }}
-                            className="px-4 py-1.5 bg-[#f05228] hover:bg-[#e0431a] text-white font-display font-extrabold text-[10px] uppercase rounded-lg transition-colors cursor-pointer inline-flex items-center gap-1.5"
-                          >
-                            <span>View Details</span>
-                            <ArrowRight className="w-3 h-3" />
-                          </button>
-                        ) : (
-                          <span className="text-[10px] font-mono text-[#f05228] font-bold">
-                            Click to select
-                          </span>
-                        )}
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-
-              {/* Card Navigation Controls */}
-              <div className="pt-12 flex items-center gap-4 z-30 relative lg:translate-y-18">
-                <button
-                  onClick={() => setActiveIndex((prev) => (prev === 0 ? journeyData.length - 1 : prev - 1))}
-                  aria-label="Previous journey card"
-                  className="p-3 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition-colors cursor-pointer"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-
-                {/* Pagination Dots */}
-                <div className="flex items-center gap-2 px-2">
-                  {journeyData.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setActiveIndex(idx)}
-                      className={`h-2 rounded-full transition-all cursor-pointer ${activeIndex === idx ? 'w-6 bg-[#f05228]' : 'w-2 bg-zinc-700'
-                        }`}
-                    />
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => setActiveIndex((prev) => (prev === journeyData.length - 1 ? 0 : prev + 1))}
-                  aria-label="Next journey card"
-                  className="p-3 rounded-full bg-white text-black hover:bg-zinc-200 transition-colors cursor-pointer shadow-lg"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-
-            </div>
-          </div>
-
-          {/* Divider & Consultation CTA (Centered Below Columns) */}
-          <div className="text-center pt-12 mt-7 lg:mt-24 border-zinc-800/80 max-w-xl mx-auto space-y-3 relative z-30">
-            <h3 className="font-display text-xl font-extrabold uppercase text-white tracking-tight">
-              Engineering Consultation
-            </h3>
-            <p className="text-zinc-400 text-xs sm:text-sm font-sans font-medium leading-relaxed">
-              Interested in learning more about these architectural milestones or requesting a custom solution?
-            </p>
-            <div className="pt-2">
-              <button
-                onClick={onActionClick}
-                className="px-6 py-3 bg-white text-black font-display font-extrabold text-xs uppercase tracking-wider rounded-xl hover:bg-zinc-200 transition-colors shadow-xl cursor-pointer"
+              {/* Solid Color Card */}
+              <motion.div
+                onClick={() => handleCardClick(index)}
+                initial={false}
+                animate={{
+                  height: targetHeight,
+                }}
+                transition={{
+                  duration: 0.36,
+                  ease: [0.25, 1, 0.5, 1],
+                }}
+                className={`relative w-full rounded-[26px] ${exp.solidBg} text-white ${
+                  !isFullContent ? 'cursor-pointer' : 'cursor-default'
+                } overflow-hidden select-none shadow-[0_15px_35px_rgba(0,0,0,0.5)] ${
+                  isFullContent
+                    ? 'ring-2 ring-white shadow-[0_25px_60px_rgba(0,0,0,0.85)]'
+                    : isMiniContent
+                    ? 'ring-1 ring-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.7)]'
+                    : 'hover:brightness-105'
+                }`}
               >
-                Schedule Engineering Call
-              </button>
+                {/* Top Specular Line */}
+                <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+
+                {/* ================================================================= */}
+                {/* 1. CLOSED STATE (58px bar)                                        */}
+                {/* ================================================================= */}
+                {isClosed && (
+                  <div className="h-[58px] px-5 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3.5 min-w-0">
+                      <div className="w-8 h-8 rounded-xl bg-black/25 border border-white/20 flex items-center justify-center shrink-0">
+                        {renderExperienceIcon(exp.iconType)}
+                      </div>
+                      <span className="font-display text-sm sm:text-base font-bold text-white truncate">
+                        {exp.role}
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-3 shrink-0 font-mono text-[11px]">
+                      <span className="px-2.5 py-0.5 rounded-full bg-black/30 border border-white/20 font-bold uppercase hidden sm:inline-block">
+                        {exp.milestone}
+                      </span>
+                      <div className="w-6 h-6 rounded-full bg-black/20 flex items-center justify-center text-white/80">
+                        <ChevronRight className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ================================================================= */}
+                {/* 2. HOVER MINI CONTENT STATE (210px preview)                       */}
+                {/* ================================================================= */}
+                {isMiniContent && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="h-full p-5 sm:p-6 flex flex-col justify-between"
+                  >
+                    {/* Header */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-2xl bg-black/30 border border-white/25 flex items-center justify-center shadow-md">
+                          {renderExperienceIcon(exp.iconType)}
+                        </div>
+                        <div>
+                          <span className="text-[10px] uppercase font-mono tracking-widest text-white/80 font-bold block">
+                            {exp.codeTag}
+                          </span>
+                          <h3 className="font-display text-base sm:text-lg font-bold text-white leading-tight">
+                            {exp.role}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <span className="text-[10px] font-mono font-bold px-2.5 py-1 rounded-full bg-black/30 border border-white/20">
+                        {exp.milestone}
+                      </span>
+                    </div>
+
+                    {/* Mini Content Short Summary */}
+                    <p className="text-xs text-white/95 font-medium leading-relaxed my-auto line-clamp-2">
+                      {exp.shortDesc}
+                    </p>
+
+                    {/* Click prompt footer */}
+                    <div className="flex items-center justify-between pt-2 border-t border-white/20 text-[11px] font-mono text-white/90">
+                      <span className="font-bold flex items-center gap-1.5">
+                        <Building2 className="w-3.5 h-3.5 text-white/80" />
+                        {exp.company}
+                      </span>
+                      <span className="flex items-center gap-1 font-bold underline underline-offset-2">
+                        <span>Click for Full Content</span>
+                        <Maximize2 className="w-3 h-3" />
+                      </span>
+                    </div>
+                  </motion.div>
+                )}
+
+                {/* ================================================================= */}
+                {/* 3. CLICK FULL CONTENT STATE (440px - Smooth Symmetric Collapse)   */}
+                {/* ================================================================= */}
+                {isFullContent && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.22 }}
+                    className="h-full p-6 sm:p-7 flex flex-col justify-between"
+                  >
+                    {/* Top Header */}
+                    <div className="flex items-start justify-between gap-4 border-b border-white/20 pb-3">
+                      <div className="flex items-center gap-3.5">
+                        <div className="w-12 h-12 rounded-2xl bg-black/35 border border-white/30 flex items-center justify-center shadow-lg shrink-0">
+                          {renderExperienceIcon(exp.iconType)}
+                        </div>
+                        <div>
+                          <span className="text-[10px] uppercase font-mono tracking-widest text-white/80 font-bold block">
+                            {exp.codeTag}
+                          </span>
+                          <h3 className="font-display text-xl sm:text-2xl font-black text-white leading-snug">
+                            {exp.role}
+                          </h3>
+                        </div>
+                      </div>
+
+                      <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full bg-black/30 border border-white/25">
+                        {exp.milestone}
+                      </span>
+                    </div>
+
+                    {/* Meta Row */}
+                    <div className="flex items-center justify-between text-xs font-mono text-white/90">
+                      <span className="flex items-center gap-1.5 font-bold">
+                        <Building2 className="w-3.5 h-3.5 text-white/80" />
+                        {exp.company}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-white/80" />
+                        {exp.period}
+                      </span>
+                    </div>
+
+                    {/* Full Summary */}
+                    <p className="text-xs sm:text-sm text-white/95 leading-relaxed font-sans font-medium">
+                      {exp.shortDesc}
+                    </p>
+
+                    {/* Technical Bullet Points */}
+                    <div className="space-y-1.5 pt-1">
+                      <span className="text-[10px] uppercase tracking-widest font-mono text-white/90 font-bold block">
+                        // Key Technical Achievements & Architecture:
+                      </span>
+                      {exp.bulletPoints.map((bullet, bIdx) => (
+                        <div key={bIdx} className="flex items-start gap-2.5 text-xs text-white/95">
+                          <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-white" />
+                          <span className="leading-snug">{bullet}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tech Stack Badges */}
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {exp.skills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="text-[11px] font-mono px-2.5 py-1 rounded-lg bg-black/30 border border-white/25 text-white font-bold"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Bottom Status Bar */}
+                    <div className="flex items-center justify-between pt-2.5 border-t border-white/20 text-xs font-mono text-white/80">
+                      <span>{exp.period}</span>
+                      <span className="text-[11px]">
+                        Move cursor away to close
+                      </span>
+                    </div>
+
+                  </motion.div>
+                )}
+
+              </motion.div>
             </div>
-          </div>
-        </div>
-      </motion.section>
+          );
+        })}
+      </div>
+
     </div>
   );
 };
+
+export default JourneyExperienceDeck;

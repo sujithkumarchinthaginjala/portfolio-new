@@ -18,7 +18,7 @@ export const HeroCenter: React.FC<HeroCenterProps> = ({
   nameOpacity
 }) => {
   return (
-    <div id="home" className="relative z-10 w-full flex-1 flex flex-col items-center justify-center px-6 md:px-12 max-w-7xl mx-auto my-auto py-12 min-h-[62vh]">
+    <div id="home" className="relative z-10 w-full flex-1 flex flex-col items-center justify-center px-6 sm:px-12 lg:px-16 my-auto py-12 min-h-[62vh]">
       <div className="w-full grid grid-cols-1 md:grid-cols-12 items-center gap-8 my-auto">
 
         {/* Left Column: Stylized Tagline Paragraph with Bold Typography micro labels */}

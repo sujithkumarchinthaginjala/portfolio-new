@@ -238,7 +238,7 @@ export const SkillsSection: React.FC<SkillsSectionProps> = ({ onExploreClick }) 
       ref={sectionRef}
       {...scrollFx}
       id="skills"
-      className="relative z-10 w-full py-20 px-4 sm:px-8 max-w-7xl mx-auto text-white border-t border-zinc-800/80 overflow-hidden"
+      className="relative z-10 w-full py-24 px-6 sm:px-12 lg:px-16 text-white border-t border-zinc-800/80 overflow-hidden"
     >
       
       {/* Top Eyebrow Tag */}
