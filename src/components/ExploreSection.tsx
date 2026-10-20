@@ -293,7 +293,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
         </motion.div>
 
         {/* ========================================================================= */}
-        {/* LAYER 2: SHADER DISSOLVE TRANSITION (Center Portal Ring: 0.64-0.78)       */}
+        {/* LAYER 2: WEBGL LIQUID PIXEL TRANSITION EFFECT (0.60 - 0.85)               */}
         {/* ========================================================================= */}
         <SectionDissolveTransition scrollYProgress={scrollYProgress} />
 
@@ -308,7 +308,7 @@ export const ExploreSection: React.FC<ExploreSectionProps> = ({
           className="absolute inset-0 w-full h-full flex items-center justify-center z-40 pointer-events-auto px-6 sm:px-12 lg:px-16"
         >
           <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center justify-between pointer-events-auto">
-            
+
             {/* Left Column: Eyebrow + Header + Description + Resume Button */}
             <div className="lg:col-span-5 flex flex-col items-start gap-5 z-10 pointer-events-auto">
               <span className="text-[10px] uppercase tracking-[0.3em] font-semibold text-[#f05228] inline-block font-mono bg-[#f05228]/10 border border-[#f05228]/30 px-3.5 py-1.5 rounded-lg shadow-sm">

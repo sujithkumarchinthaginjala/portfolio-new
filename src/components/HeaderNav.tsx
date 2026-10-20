@@ -90,8 +90,8 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         {/* Center Pill Navigation (Solid Capsule) */}
         <nav
           className={`inline-flex items-center gap-1 p-1.5 border rounded-full overflow-x-auto max-w-full relative z-10 transition-colors duration-500 ${isLightHeader
-              ? 'bg-zinc-100 border-zinc-200 shadow-inner'
-              : 'bg-zinc-900 border-zinc-800 shadow-inner'
+            ? 'bg-zinc-100 border-zinc-200 shadow-inner'
+            : 'bg-zinc-900 border-zinc-800 shadow-inner'
             }`}
         >
           {navItems.map((item) => {
@@ -121,12 +121,12 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
                   }
                 }}
                 className={`relative px-3.5 sm:px-4 py-1.5 text-[11px] font-semibold tracking-wider uppercase transition-all rounded-full cursor-pointer select-none whitespace-nowrap ${isActive
-                    ? isLightHeader
-                      ? 'text-[#f05228] font-bold'
-                      : 'text-white font-bold'
-                    : isLightHeader
-                      ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-200/80'
-                      : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
+                  ? isLightHeader
+                    ? 'text-[#f05228] font-bold'
+                    : 'text-white font-bold'
+                  : isLightHeader
+                    ? 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-200/80'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
                   }`}
               >
                 {isActive && (

@@ -162,8 +162,8 @@ export const JourneyExperienceDeck: React.FC = () => {
           {clickedIndex !== null
             ? `Milestone 0${clickedIndex + 1} Full View`
             : hoveredIndex !== null
-            ? `Milestone 0${hoveredIndex + 1} Preview`
-            : 'All Cards Closed'}
+              ? `Milestone 0${hoveredIndex + 1} Preview`
+              : 'All Cards Closed'}
         </span>
       </div>
 
@@ -212,15 +212,13 @@ export const JourneyExperienceDeck: React.FC = () => {
                   duration: 0.36,
                   ease: [0.25, 1, 0.5, 1],
                 }}
-                className={`relative w-full rounded-[26px] ${exp.solidBg} text-white ${
-                  !isFullContent ? 'cursor-pointer' : 'cursor-default'
-                } overflow-hidden select-none shadow-[0_15px_35px_rgba(0,0,0,0.5)] ${
-                  isFullContent
+                className={`relative w-full rounded-[26px] ${exp.solidBg} text-white ${!isFullContent ? 'cursor-pointer' : 'cursor-default'
+                  } overflow-hidden select-none shadow-[0_15px_35px_rgba(0,0,0,0.5)] ${isFullContent
                     ? 'ring-2 ring-white shadow-[0_25px_60px_rgba(0,0,0,0.85)]'
                     : isMiniContent
-                    ? 'ring-1 ring-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.7)]'
-                    : 'hover:brightness-105'
-                }`}
+                      ? 'ring-1 ring-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.7)]'
+                      : 'hover:brightness-105'
+                  }`}
               >
                 {/* Top Specular Line */}
                 <div className="absolute inset-x-0 top-0 h-[1.5px] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />

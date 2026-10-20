@@ -35,7 +35,7 @@ const WordReveal: React.FC<WordRevealProps> = ({
 }) => {
   const [rangeStart, rangeEnd] = range;
   const totalSpan = Math.max(0.001, rangeEnd - rangeStart);
-  
+
   // Calculate smooth staggered thresholds with overlapping windows
   const step = totalSpan / Math.max(1, total);
   const wordStart = rangeStart + index * (step * 0.82);
